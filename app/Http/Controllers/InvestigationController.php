@@ -434,16 +434,21 @@ class InvestigationController extends Controller
         $case1->lost_location = $validated["lost_location"];
         $case1->location_id = $validated["location"];
         $case1->category_id = $validated["category"];
-        $case1->status = 'wait_for_arrangement';
+        //$case1->status = 'wait_for_arrangement';
         $case1->lost_date = date('Y-m-d', strtotime($validated['date']));
         $case1->owner_name = $validated["owner_name"];
         $case1->owner_email = $validated["owner_email"];
         $case1->owner_phone = $validated["owner_phone"];
         $case1->additional_info = $validated["additional_info"];
         $case1->colors()->sync($validated['color']);
+        //This one transitions to the next state
+        $stateMachine = StateMachine::get($case1, 'investigation');
+        $stateMachine->apply('wait_for_delivery');
+
         $case1->save();
 
         $case2 = Investigation::where('reference', $ref2)->firstOrFail();
+        //Dont bother to use the state machine, just force it into the canceled state without logging
         $case2->status = 'canceled';
         $case2->save();
 
