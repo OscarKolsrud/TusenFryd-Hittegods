@@ -179,10 +179,6 @@ Route::group(['middleware' => ['auth', 'activated', 'currentUser', 'activity', '
 // Registered, activated, and is admin routes.
 Route::group(['middleware' => ['auth', 'activated', 'role:admin', 'activity', 'twostep', 'checkblocked']], function () {
 
-    Route::get('/admintools', function () {
-        return view('pages.public.terms');//TODO: FIX THIS LINK
-    })->name('adminlanding');
-
     Route::resource('/users/deleted', 'SoftDeletesController', [
         'only' => [
             'index', 'show', 'update', 'destroy',

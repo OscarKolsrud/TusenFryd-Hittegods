@@ -31,6 +31,7 @@
                         <div class="mb-3">
                             @include('panels.laf.imagecarousel')
                         </div>
+                        @if(!$statemachine->metadata('state', 'resolution'))
                         <form action="{{ URL::temporarySignedRoute('store_images', now()->addMinutes(60), ['reference' => $case->reference]) }}" method="post" class="dropzone" id="image-dropzone" enctype="multipart/form-data">
                             @csrf
                                 <div class="dz-message needsclick">
@@ -45,6 +46,7 @@
                             <br>
                             <small class="font-italic">Dette vil ikke varsle Gjesten</small>
                         </div>
+                        @endif
                     </div>
                     <hr>
                     <div>
@@ -75,12 +77,12 @@
                             <input type="text" name="messagetype" value="message" hidden>
                             <div class="form-group">
                                 <label for="message" class="font-weight-bold h4">Skriv ny melding <button type="button" class="btn btn-primary btn-sm" id="messageProcess-{{ $case->reference }}" onclick="markProcessed('{{ $case->reference }}', true);">Merk alle som behandlet</button></label>
-                                <textarea class="form-control" id="message" name="message" rows="3"></textarea>
+                                <textarea class="form-control" id="message" name="message" rows="3" @if($statemachine->metadata('state', 'resolution')) disabled @endif>@if($statemachine->metadata('state', 'resolution')) Nye meldinger er ikke mulig fordi saken er ansett som ferdig @endif</textarea>
                             </div>
                             <div class="form-group">
                                 <div class="btn-group float-right" role="group" aria-label="Flere valg">
-                                    <button type="button" class="btn btn-secondary mb-2" data-toggle="modal" data-target="#moreActionsModal">Flere handlinger</button>
-                                    <button type="submit" class="btn btn-primary mb-2">Send melding</button>
+                                    <button type="button" class="btn btn-secondary mb-2" data-toggle="modal" data-target="#moreActionsModal" @if($statemachine->metadata('state', 'resolution')) disabled @endif>Flere handlinger</button>
+                                    <button type="submit" class="btn btn-primary mb-2" @if($statemachine->metadata('state', 'resolution')) disabled @endif>Send melding</button>
                                 </div>
                             </div>
                         </form>
@@ -119,8 +121,11 @@
             <div class="card">
                 <div class="card-body">
                     <h3>Sak: {{ $case->reference }}</h3>
+                    @if($statemachine->metadata('state', 'resolution'))
+                       <span class="text-danger font-weight-bold"><i class="fa fa-lock" aria-hidden="true"></i> Låst for redigering</span>
+                    @endif
                     <div class="mb-3">
-                        <span class="font-weight-bold">Status: </span><span class="badge badge-success">{{ $statemachine->metadata('state','title') }}</span><br>
+                        <span class="font-weight-bold">Status: </span><span class="badge badge-{{ $statemachine->metadata('state','class_color') }}">{{ $statemachine->metadata('state','title') }}</span><br>
                     </div>
                     @if($case->owner_name)
                     <div class="mb-3">
@@ -145,13 +150,16 @@
                         <span class="font-weight-bold">Sist redigert: </span>{{ date('d.m.Y H:s', strtotime($case->audits()->latest()->first()->getMetadata()["audit_updated_at"])) }}<br>
                         <span class="font-weight-bold">Av: </span>{{ $latestaudituser->first_name }}<br>
                     </div>
+                    @if(!$statemachine->metadata('state', 'resolution'))
                     <a role="button" class="btn btn-primary btn-block" href="{{ Request::url() }}/edit">Rediger sak</a>
                     <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#deleteconfirmModal">Slett sak (Permanent)</button>
+                    @endif
                     <small class="font-weight-bold d-flex justify-content-center mt-1"><a href="{{ Request::url() }}/edithistory">Historikk</a></small>
                 </div>
             </div>
             <div class="card bg-light border-light">
                 <div class="card-body">
+                    @if(!$statemachine->metadata('state', 'resolution'))
                     <div class="text-center">
                         <small class="font-weight-bold">Sammenlign & Slå Sammen</small>
                             <div class="input-group">
@@ -161,11 +169,12 @@
                                 </div>
                             </div>
                     </div>
+                    @endif
 
                     <div class="text-center">
                         <small class="font-weight-bold">Foreslåtte status endringer</small>
                         @forelse ($statemachine->getPossibleTransitions() as $state)
-                            <a role="button" class="btn btn-{{ $statemachine->metadata('transition', $state, 'class') ?? 'primary' }} btn-block" href="#">{{ $statemachine->metadata('transition', $state, 'title') }}</a>
+                            <a role="button" class="btn btn-{{ $statemachine->metadata('transition', $state, 'class_color') ?? 'primary' }} btn-block" href="#">{{ $statemachine->metadata('transition', $state, 'title') }}</a>
                         @empty
                             <button type="button" class="btn btn-secondary btn-block" disabled>Ingen forslag</button>
                         @endforelse

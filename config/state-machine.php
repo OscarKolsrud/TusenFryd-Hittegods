@@ -19,47 +19,47 @@ return [
         'states' => [
             [
                 'name' => 'lost',
-                'metadata' => ['title' => 'Registrert tapt', 'slug' => 'registrert-tapt', 'button_color' => 'bg-light', 'colorcode' => '#D3D3D3', 'resolution' => false],
+                'metadata' => ['title' => 'Registrert tapt', 'slug' => 'registrert-tapt', 'class_color' => 'secondary', 'colorcode' => '#D3D3D3', 'resolution' => false],
             ],
             [
                 'name' => 'found',
-                'metadata' => ['title' => 'Registrert mistet', 'slug' => 'registrert-mistet', 'button_color' => 'bg-light', 'colorcode' => '#D3D3D3',  'resolution' => false],
+                'metadata' => ['title' => 'Registrert mistet', 'slug' => 'registrert-mistet', 'class_color' => 'secondary', 'colorcode' => '#D3D3D3',  'resolution' => false],
             ],
             [
                 'name' => 'evicted',
-                'metadata' => ['title' => 'Kastet', 'slug' => 'kastet', 'button_color' => 'bg-danger', 'colorcode' => '#FF0000',  'resolution' => true],
+                'metadata' => ['title' => 'Kastet', 'slug' => 'kastet', 'class_color' => 'danger', 'colorcode' => '#FF0000',  'resolution' => true],
             ],
             [
                 'name' => 'police',
-                'metadata' => ['title' => 'Sendt til politi', 'slug' => 'police', 'button_color' => 'bg-info', 'colorcode' => '#48D1CC',  'resolution' => true],
+                'metadata' => ['title' => 'Sendt til politi', 'slug' => 'police', 'class_color' => 'info', 'colorcode' => '#48D1CC',  'resolution' => true],
             ],
             [
                 'name' => 'wait_for_police',
-                'metadata' => ['title' => 'Venter på sending til politi', 'slug' => 'wait_police', 'button_color' => 'bg-danger', 'colorcode' => '#FF0000',  'resolution' => false],
+                'metadata' => ['title' => 'Venter på sending til politi', 'slug' => 'wait_police', 'class_color' => 'danger', 'colorcode' => '#FF0000',  'resolution' => false],
             ],
             [
                 'name' => 'canceled',
-                'metadata' => ['title' => 'Avsluttet', 'slug' => 'canceled', 'button_color' => 'bg-danger', 'colorcode' => '#FF0000',  'resolution' => true],
+                'metadata' => ['title' => 'Avsluttet', 'slug' => 'canceled', 'class_color' => 'danger', 'colorcode' => '#FF0000',  'resolution' => true],
             ],
             [
                 'name' => 'wait_for_delivery',
-                'metadata' => ['title' => 'Venter på å bli utlevert', 'slug' => 'wait-delivery', 'button_color' => 'bg-success', 'colorcode' => '#00FF00',  'resolution' => false],
+                'metadata' => ['title' => 'Venter på å bli utlevert', 'slug' => 'wait-delivery', 'class_color' => 'success', 'colorcode' => '#00FF00',  'resolution' => false],
             ],
             [
                 'name' => 'wait_for_send',
-                'metadata' => ['title' => 'Venter på sending', 'slug' => 'wait-send', 'button_color' => 'bg-primary', 'colorcode' => '#1E90FF',  'resolution' => false],
+                'metadata' => ['title' => 'Venter på sending', 'slug' => 'wait-send', 'class_color' => 'primary', 'colorcode' => '#1E90FF',  'resolution' => false],
             ],
             [
                 'name' => 'sent',
-                'metadata' => ['title' => 'Sendt', 'slug' => 'sent', 'button_color' => 'bg-success', 'colorcode' => '#00FF00',  'resolution' => true],
+                'metadata' => ['title' => 'Sendt', 'slug' => 'sent', 'class_color' => 'success', 'colorcode' => '#00FF00',  'resolution' => true],
             ],
             [
                 'name' => 'wait_for_pickup',
-                'metadata' => ['title' => 'Venter på henting', 'slug' => 'wait-pickup', 'button_color' => 'bg-primary', 'colorcode' => '#1E90FF',  'resolution' => false],
+                'metadata' => ['title' => 'Venter på henting', 'slug' => 'wait-pickup', 'class_color' => 'primary', 'colorcode' => '#1E90FF',  'resolution' => false],
             ],
             [
                 'name' => 'picked_up',
-                'metadata' => ['title' => 'Hentet', 'slug' => 'picked-up', 'button_color' => 'bg-success', 'colorcode' => '#00FF00',  'resolution' => true],
+                'metadata' => ['title' => 'Hentet', 'slug' => 'picked-up', 'class_color' => 'success', 'colorcode' => '#00FF00',  'resolution' => true],
             ],
         ],
 
@@ -68,78 +68,78 @@ return [
             'cancel' => [
                 'from' => ['wait_for_delivery', 'found'],
                 'to' => 'canceled',
-                'metadata' => ['title' => 'Avslutt', 'button_color' => 'bg-danger', 'colorcode' => '#FF0000']
+                'metadata' => ['title' => 'Avslutt', 'class_color' => 'danger', 'colorcode' => '#FF0000']
             ],
             'evicted' => [
                 'from' => ['wait_for_delivery', 'found', 'wait_for_send', 'wait_for_pickup'],
                 'to' => 'canceled',
-                'metadata' => ['title' => 'Kast', 'button_color' => 'bg-danger', 'colorcode' => '#FF0000']
+                'metadata' => ['title' => 'Kast', 'class_color' => 'danger', 'colorcode' => '#FF0000']
             ],
             'wait_for_police' => [
                 'from' => ['wait_for_delivery', 'found', 'wait_for_send', 'wait_for_pickup'],
                 'to' => 'wait_for_police',
-                'metadata' => ['title' => 'Venter: Politi', 'button_color' => 'bg-primary', 'colorcode' => '#1E90FF']
+                'metadata' => ['title' => 'Venter: Politi', 'class_color' => 'primary', 'colorcode' => '#1E90FF']
             ],
             'police' => [
                 'from' => ['wait_for_police'],
                 'to' => 'police',
-                'metadata' => ['title' => 'Send til Politi', 'button_color' => 'bg-success', 'colorcode' => '#008000']
+                'metadata' => ['title' => 'Send til Politi', 'class_color' => 'success', 'colorcode' => '#008000']
             ],
             'wait_for_delivery' => [
                 'from' => ['lost', 'found'],
                 'to' => 'wait_for_delivery',
-                'metadata' => ['title' => 'Venter på avtale med gjest', 'button_color' => 'bg-success', 'colorcode' => '#008000']
+                'metadata' => ['title' => 'Venter på avtale med gjest', 'class_color' => 'success', 'colorcode' => '#008000']
             ],
             'wait_for_send' => [
                 'from' => ['wait_for_delivery'],
                 'to' => 'wait_for_send',
-                'metadata' => ['title' => 'Venter på sending', 'button_color' => 'bg-primary', 'colorcode' => '#1E90FF']
+                'metadata' => ['title' => 'Venter på sending', 'class_color' => 'primary', 'colorcode' => '#1E90FF']
             ],
             'wait_for_pickup' => [
                 'from' => ['wait_for_delivery'],
                 'to' => 'wait_for_pickup',
-                'metadata' => ['title' => 'Venter på henting', 'button_color' => 'bg-primary', 'colorcode' => '#1E90FF']
+                'metadata' => ['title' => 'Venter på henting', 'class_color' => 'primary', 'colorcode' => '#1E90FF']
             ],
             'sent' => [
                 'from' => ['wait_for_send'],
                 'to' => 'sent',
-                'metadata' => ['title' => 'Sendt', 'button_color' => 'bg-success', 'colorcode' => '#008000']
+                'metadata' => ['title' => 'Sendt', 'class_color' => 'success', 'colorcode' => '#008000']
             ],
             'picked_up' => [
                 'from' => ['wait_for_pickup'],
                 'to' => 'picked_up',
-                'metadata' => ['title' => 'Hentet', 'button_color' => 'bg-success', 'colorcode' => '#008000']
+                'metadata' => ['title' => 'Hentet', 'class_color' => 'success', 'colorcode' => '#008000']
             ],
             //These transitions here should not be normally called but are useful for getting a transition to pass when "regretting" a change thus not needing a direct db query
             'regret_to_lost' => [
                 'from' => ['canceled', 'wait_for_delivery'],
                 'to' => 'lost',
-                'metadata' => ['title' => 'Angre', 'button_color' => 'bg-light', 'colorcode' => '#D3D3D3']
+                'metadata' => ['title' => 'Angre til forrige status', 'class_color' => 'secondary', 'colorcode' => '#D3D3D3']
             ],
             'regret_to_found' => [
                 'from' => ['evicted', 'wait_for_delivery', 'wait_for_police'],
                 'to' => 'found',
-                'metadata' => ['title' => 'Angre', 'button_color' => 'bg-light', 'colorcode' => '#D3D3D3']
+                'metadata' => ['title' => 'Angre til forrige status', 'class_color' => 'secondary', 'colorcode' => '#D3D3D3']
             ],
             'regret_to_wait_for_police' => [
                 'from' => ['police'],
                 'to' => 'wait_for_police',
-                'metadata' => ['title' => 'Angre', 'button_color' => 'bg-light', 'colorcode' => '#D3D3D3']
+                'metadata' => ['title' => 'Angre til forrige status', 'class_color' => 'secondary', 'colorcode' => '#D3D3D3']
             ],
             'regret_to_wait_for_delivery' => [
                 'from' => ['wait_for_send', 'wait_for_pickup', 'wait_for_police', 'evicted'],
                 'to' => 'wait_for_delivery',
-                'metadata' => ['title' => 'Angre', 'button_color' => 'bg-light', 'colorcode' => '#D3D3D3']
+                'metadata' => ['title' => 'Angre til forrige status', 'class_color' => 'secondary', 'colorcode' => '#D3D3D3']
             ],
             'regret_to_wait_for_send' => [
                 'from' => ['sent'],
                 'to' => 'wait_for_send',
-                'metadata' => ['title' => 'Angre', 'button_color' => 'bg-light', 'colorcode' => '#D3D3D3']
+                'metadata' => ['title' => 'Angre til forrige status', 'class_color' => 'secondary', 'colorcode' => '#D3D3D3']
             ],
             'regret_to_wait_for_pickup' => [
                 'from' => ['picked_up'],
                 'to' => 'wait_for_pickup',
-                'metadata' => ['title' => 'Angre', 'button_color' => 'bg-light', 'colorcode' => '#D3D3D3']
+                'metadata' => ['title' => 'Angre til forrige status', 'class_color' => 'secondary', 'colorcode' => '#D3D3D3']
             ],
         ],
 

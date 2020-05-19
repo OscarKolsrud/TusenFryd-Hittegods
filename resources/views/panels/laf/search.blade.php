@@ -1,9 +1,12 @@
 @forelse ($data as $d)
+    @php
+    $sm = \Sebdesign\SM\Facade::get(\App\Models\Investigation::find($d["id"]), 'investigation');
+    @endphp
     <div class="card mt-3 mb-3">
         <a href="{{ route('show_case', ['reference' => $d["reference"]]) }}">
             <div class="card-body row">
                 <div class="col-9">
-                    <span class="badge badge-secondary mr-1">{{ \Sebdesign\SM\Facade::get(\App\Models\Investigation::find($d["id"]), 'investigation')->metadata('state', 'title') }}</span><span class="font-weight-bold">{{ $d["item"] }} (K: {{ \App\Models\Category::find($d["category_id"])->category_name ?? 'Ingen kategori' }})</span><br>
+                    <span class="badge badge-{{ $sm->metadata('state', 'class_color') }} mr-1">{{ $sm->metadata('state', 'title') }}</span><span class="font-weight-bold">{{ $d["item"] }} (K: {{ \App\Models\Category::find($d["category_id"])->category_name ?? 'Ingen kategori' }})</span><br>
                     @forelse ($d["colors"] as $color)
                         <span>{{ $color["color"] }} <i class="fa fa-circle @if($color["class"])text-{{ $color["class"] }}@endif" @if($color["colorcode"] && !$color["class"])style="color:{{ $color["colorcode"] }};" @endif aria-hidden="true"></i></span>
                     @empty
