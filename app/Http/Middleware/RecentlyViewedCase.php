@@ -41,6 +41,7 @@ class RecentlyViewedCase
             }
 
             krsort($arr);
+            $request->session()->reflash();
             $request->session()->put('recentInvestigations', $arr);
             session()->save();
         } else {

@@ -26,24 +26,24 @@
                                 <i class="fa fa-plus-square" aria-hidden="true"></i> Legg til ny
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item {{ Request::is('case/items/active') ? 'active' : null }}"
-                               href="{{ route('laravelroles::roles.index') }}">
+                            <a class="dropdown-item {{ Request::is('case/list/*/found') ? 'active' : null }}"
+                               href="{{ route('list_case', ['list' => 'found', 'view' => 'all']) }}">
                                 Aktive
                             </a>
-                            <a class="dropdown-item {{ Request::is('case/items/today') ? 'active' : null }}"
-                               href="{{ route('laravelroles::roles.index') }}">
-                                Registrert idag
+                            <a class="dropdown-item {{ Request::is('case/list/*/found/*') ? 'active' : null }}"
+                               href="{{ route('list_case', ['list' => 'found', 'date' => \Carbon\Carbon::now()->toDateString(), 'view' => 'all']) }}">
+                                Aktive reg. idag
                             </a>
-                            <a class="dropdown-item {{ Request::is('case/items/cancelled') ? 'active' : null }}"
-                               href="{{ route('laravelroles::roles.index') }}">
-                                Avsluttet
+                            <a class="dropdown-item {{ Request::is('case/list/found/canceled') ? 'active' : null }}"
+                               href="{{ route('list_case', ['list' => 'wait_for_police', 'view' => 'found']) }}">
+                                Venter sending til politi
                             </a>
-                            <a class="dropdown-item {{ Request::is('case/items/police') ? 'active' : null }}"
-                               href="{{ route('laravelroles::roles.index') }}">
+                            <a class="dropdown-item {{ Request::is('case/list/found/police') ? 'active' : null }}"
+                               href="{{ route('list_case', ['list' => 'police', 'view' => 'found']) }}">
                                 Sendt til politi
                             </a>
-                            <a class="dropdown-item {{ Request::is('case/items/evicted') ? 'active' : null }}"
-                               href="{{ route('laravelroles::roles.index') }}">
+                            <a class="dropdown-item {{ Request::is('case/list/found/evicted') ? 'active' : null }}"
+                               href="{{ route('list_case', ['list' => 'evicted', 'view' => 'found']) }}">
                                 Kastet
                             </a>
                         </div>
@@ -60,16 +60,16 @@
                                 <i class="fa fa-plus-square" aria-hidden="true"></i> Legg til ny
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item {{ Request::is('case/lost/active') ? 'active' : null }}"
-                               href="{{ route('laravelroles::roles.index') }}">
+                            <a class="dropdown-item {{ Request::is('case/list/*/lost') ? 'active' : null }}"
+                               href="{{ route('list_case', ['list' => 'lost', 'view' => 'all']) }}">
                                 Aktive
                             </a>
-                            <a class="dropdown-item {{ Request::is('case/lost/today') ? 'active' : null }}"
-                               href="{{ route('laravelroles::roles.index') }}">
-                                Registrert idag
+                            <a class="dropdown-item {{ Request::is('case/list/*/lost/*') ? 'active' : null }}"
+                               href="{{ route('list_case', ['list' => 'lost', 'date' => \Carbon\Carbon::now()->toDateString(), 'view' => 'all']) }}">
+                                Aktive reg. idag
                             </a>
-                            <a class="dropdown-item {{ Request::is('case/lost/cancelled') ? 'active' : null }}"
-                               href="{{ route('laravelroles::roles.index') }}">
+                            <a class="dropdown-item {{ Request::is('case/list/lost/canceled') ? 'active' : null }}"
+                               href="{{ route('list_case', ['list' => 'canceled', 'view' => 'lost']) }}">
                                 Avsluttet
                             </a>
                         </div>
@@ -78,26 +78,26 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Løste
+                            Utsending/Utlevering
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item {{ Request::is('case/waiting/delivery') ? 'active' : null }}"
-                               href="{{ route('laravelroles::roles.index') }}">
+                            <a class="dropdown-item {{ Request::is('case/list/all/wait_for_pickup') ? 'active' : null }}"
+                               href="{{ route('list_case', ['list' => 'wait_for_pickup', 'view' => 'all']) }}">
                                 Venter på utlevering
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item {{ Request::is('case/waiting/send') ? 'active' : null }}"
-                               href="{{ route('laravelroles::roles.index') }}">
+                            <a class="dropdown-item {{ Request::is('case/list/all/wait_for_send') ? 'active' : null }}"
+                               href="{{ route('list_case', ['list' => 'wait_for_send', 'view' => 'all']) }}">
                                 Venter på utsending
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item {{ Request::is('case/waiting/send') ? 'active' : null }}"
-                               href="{{ route('laravelroles::roles.index') }}">
+                            <a class="dropdown-item {{ Request::is('case/list/all/picked_up') ? 'active' : null }}"
+                               href="{{ route('list_case', ['list' => 'picked_up', 'view' => 'all']) }}">
                                 Utlevert
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item {{ Request::is('case/waiting/send') ? 'active' : null }}"
-                               href="{{ route('laravelroles::roles.index') }}">
+                            <a class="dropdown-item {{ Request::is('case/list/all/sent') ? 'active' : null }}"
+                               href="{{ route('list_case', ['list' => 'sent', 'view' => 'all']) }}">
                                 Sendt
                             </a>
                         </div>

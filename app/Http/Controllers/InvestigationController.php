@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Sebdesign\SM\Facade as StateMachine;
+use SM\SMException;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class InvestigationController extends Controller
@@ -24,10 +25,38 @@ class InvestigationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function list(Request $request, $view="all", $list="found", $date="none")
     {
-        //
+        //This is just to get a statemachine object to get the title of the wanted status
+        $object = Investigation::where('status', $list)->first();
+
+        if (isset($object->reference)) {
+            $sm = StateMachine::get($object, 'investigation');
+
+            if ($date == "none" && $view == "all") {
+                return view('pages.laf.listpaginated', [
+                    'title' => $sm->metadata('state', $list, 'title'),
+                    'cases' => Investigation::where('status', $list)->paginate(25)
+                ]);
+            } elseif($view !== "all") {
+                return view('pages.laf.listpaginated', [
+                    'title' => $sm->metadata('state', $list, 'title'),
+                    'cases' => Investigation::where('status', $list)->where('initial_status', $view)->paginate(25)
+                ]);
+            } else {
+                return view('pages.laf.listpaginated', [
+                    'title' => $sm->metadata('state', $list, 'title'),
+                    'cases' => Investigation::where('status', $list)->where('lost_date', $date)->paginate(25)
+                ]);
+            }
+        } else {
+            return view('pages.laf.listpaginated', [
+                'title' => 'Resultat',
+                'cases' => Investigation::where('status', $list)->paginate(25)
+            ]);
+        }
     }
+
 
     /**
      * Show the form for creating a new resource. (Item)
@@ -434,7 +463,7 @@ class InvestigationController extends Controller
         $case1->lost_location = $validated["lost_location"];
         $case1->location_id = $validated["location"];
         $case1->category_id = $validated["category"];
-        //$case1->status = 'wait_for_arrangement';
+        $case1->status = 'wait_for_delivery';
         $case1->lost_date = date('Y-m-d', strtotime($validated['date']));
         $case1->owner_name = $validated["owner_name"];
         $case1->owner_email = $validated["owner_email"];
@@ -442,8 +471,8 @@ class InvestigationController extends Controller
         $case1->additional_info = $validated["additional_info"];
         $case1->colors()->sync($validated['color']);
         //This one transitions to the next state
-        $stateMachine = StateMachine::get($case1, 'investigation');
-        $stateMachine->apply('wait_for_delivery');
+        //$stateMachine = StateMachine::get($case1, 'investigation');
+        //$stateMachine->apply('wait_for_delivery');
 
         $case1->save();
 
@@ -494,7 +523,14 @@ class InvestigationController extends Controller
  */
     public function edit($id)
     {
-        //
+        $case = Investigation::where('reference', $id)->firstOrFail();
+
+        return view('pages.laf.editcase', [
+            'case' => $case,
+            'categories' => Category::where('visible', 1)->get(),
+            'colors' => Color::where('visible', 1)->get(),
+            'locations' => Location::where('visible', 1)->get()
+        ]);
     }
 
     /**
@@ -506,7 +542,48 @@ class InvestigationController extends Controller
  */
     public function update(Request $request, $id)
     {
-        //
+        //Validate
+        $validated = $request->validate([
+            'item' => 'required',
+            'category_id' => 'required|exists:categories,id',
+            'color' => 'array|exists:colors,id|nullable',
+            'condition' => 'nullable',
+            'description' => 'required',
+            'lost_date' => 'required|date',
+            'lost_location' => 'nullable',
+            'location_id' => 'required_if:require_locationpos,true|exists:locations,id|nullable',
+            'owner_name' => 'required_if:require_names,true',
+            'owner_email' => 'required_without:owner_phone|email|nullable',
+            'owner_phone' => 'required_without:owner_email|phone:auto|nullable',
+            'additional_info' => 'nullable',
+        ], [
+            'item.required' => 'En gjenstand tittel kreves',
+            'description.required' => 'En beskrivelse kreves',
+            'color.array' => 'Valgte farger er ikke en liste (array)',
+            'color.exists' => 'En av de valgte fargene er ugyldig',
+            'date.required' => 'Dato tapt kreves',
+            'date.date' => 'Datoformatet er feil',
+            'category_id.required' => 'En kategori kreves',
+            'category_id.exists' => 'Kategorien valgt er ugyldig',
+            'location_id.required_if' => 'En lagringsplass kreves',
+            'location_id.exists' => 'Lagringsplassen valgt er ugyldig',
+            'owner_name.required_if' => 'Et navn kreves',
+            'owner_email.required_without' => 'Enten en E-Post eller et telefonnummer kreves',
+            'owner_email.email' => 'E-Posten er ikke gyldig',
+            'owner_phone.required_without' => 'Enten en E-Post eller et telefonnummer kreves',
+            'owner_phone.phone' => 'Telefonnummeret er ugyldig'
+        ]);
+
+        $update = $validated;
+
+        unset($update["color"]);
+
+        //Pull the case
+        $case = Investigation::where('reference', $id)->firstorFail();
+
+        $case->update($update);
+
+        return redirect('/case/' . $case->reference)->with(array('message' => "Endringene ble lagret", 'status' => 'success'));
     }
 
     /**
@@ -516,37 +593,134 @@ class InvestigationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update_status(Request $request, $id)
+    public function update_status($ref, $wantedstate)
     {
+        //Pull the case
+        $case = Investigation::where('reference', $ref)->firstorFail();
+
+        //Init the statemachine
+        $sm = StateMachine::get($case, 'investigation');
+
+        //Check if the wanted action is a regret
+        if ($wantedstate == "regret") {
+            $stateHistory = $case->stateHistory()->get();
+            //Check if the state history is existing
+            if (count($stateHistory) > 0) {
+
+                //Has history
+                $latestelement = current($stateHistory);
+
+                $el = end($latestelement);
+
+                $latestState = $el->from;
+
+                //dd($latestState);
+
+                $wantedstate = "regret_to_$latestState";
+            } else {
+                return redirect('/case/' . $case->reference)->with(array('message' => "Det er ingenting å angre på denne saken", 'status' => 'danger'));
+            }
+        }
+
+        //Check if the transaction can be applied and that it is not the same state (just for safety)
+        if ($sm->can($wantedstate) && ($sm->getState() !== $wantedstate)) {
+            try {
+                $sm->apply($wantedstate);
+
+                $currentState = $sm->metadata('state', 'title');
+
+                $case->save();
+
+                Conversation::create([
+                    'investigation_id' => $case->id,
+                    'messagetype' => 'notification',
+                    'from_guest' => false,
+                    'message' => "Statusen ble oppdatert til '$currentState'"
+                ]);
+
+                return redirect('/case/' . $case->reference)->with(array('message' => "Statusen ble oppdatert", 'status' => 'success'));
+            } catch (SMException $e) {
+                return redirect('/case/' . $case->reference)->with(array('message' => "Kan ikke overføre saken til denne statusen: $e", 'status' => 'danger'));
+            }
+        } else {
+            return redirect('/case/' . $case->reference)->with(array('message' => 'Kan ikke overføre saken til denne statusen', 'status' => 'danger'));
+        }
+    }
+
+    public function update_status_force(Request $request, $ref) {
         $validated = $request->validate([
-            'safe' => 'boolean|required',
-            'status' => 'required|min:3',
-            'category' => 'required|exists:categories,id',
-            'color' => 'array|exists:colors,id|nullable',
-            'description' => 'required',
-            'date' => 'required|date',
-            'location' => 'nullable',
-            'additional_info' => 'nullable',
+            'status' => 'required|in:evicted,police,wait_for_police,canceled,wait_for_delivery,wait_for_send,sent,wait_for_pickup,picked_up',
+        ], [
+            'status.required' => 'Status kreves',
+            'status.in' => 'Statusen er ikke gydlig',
+        ]);
+
+        //Pull the case
+        $case = Investigation::where('reference', $ref)->firstorFail();
+
+        $case->status = $request->input('status');
+
+        $case->save();
+
+        Conversation::create([
+            'investigation_id' => $case->id,
+            'messagetype' => 'notification',
+            'from_guest' => false,
+            'message' => "Statusen ble oppdatert med tvang"
+        ]);
+
+        return redirect('/case/' . $case->reference)->with(array('message' => "Statusen ble oppdatert med tvang", 'status' => 'success'))->send();
+    }
+
+    public function update_status_withowner(Request $request, $ref) {
+        $validated = $request->validate([
+            'status' => 'required|in:evicted,police,wait_for_police,canceled,wait_for_delivery,wait_for_send,sent,wait_for_pickup,picked_up',
             'owner_name' => 'required',
             'owner_email' => 'required_without:owner_phone|email|nullable',
             'owner_phone' => 'required_without:owner_email|phone:auto|nullable',
         ], [
-            'reference.unique' => 'Den tilfeldig genererte referansen er ikke unik, trykk lagre på nytt',
-            'item.required' => 'En gjenstand type kreves',
-            'item.min' => 'Gjenstand type må være lengre enn 3 tegn',
-            'category.required' => 'En kategori kreves',
-            'category,exists' => 'Kategorien valgt er ugyldig',
-            'color.array' => 'Valgte farger er ikke en liste (array)',
-            'color.exists' => 'En av de valgte fargene er ugyldig',
-            'description.required' => 'En beskrivelse kreves',
-            'date.required' => 'Dato tapt kreves',
-            'date.date' => 'Datoformatet er feil',
+            'status.required' => 'Status kreves',
+            'status.in' => 'Statusen er ikke gydlig',
             'owner_name.required' => 'Et navn kreves',
             'owner_email.required_without' => 'Enten en E-Post eller et telefonnummer kreves',
             'owner_email.email' => 'E-Posten er ikke gyldig',
             'owner_phone.required_without' => 'Enten en E-Post eller et telefonnummer kreves',
             'owner_phone.phone' => 'Telefonnummeret er ugyldig'
         ]);
+
+        //Pull the case
+        $case = Investigation::where('reference', $ref)->firstorFail();
+
+        //Init the statemachine
+        $sm = StateMachine::get($case, 'investigation');
+
+        //Check if the transaction can be applied and that it is not the same state (just for safety)
+        if ($sm->can($request->input('status')) && ($sm->getState() !== $request->input('status'))) {
+            try {
+                $sm->apply($request->input('status'));
+
+                $currentState = $sm->metadata('state', 'title');
+
+                $case->owner_name = $request->input('owner_name');
+                $case->owner_email = $request->input('owner_email');
+                $case->owner_phone = $request->input('owner_phone');
+
+                $case->save();
+
+                Conversation::create([
+                    'investigation_id' => $case->id,
+                    'messagetype' => 'notification',
+                    'from_guest' => false,
+                    'message' => "Statusen ble oppdatert til '$currentState'"
+                ]);
+
+                return redirect('/case/' . $case->reference)->with(array('message' => "Statusen ble oppdatert og kontaktinformasjon lagret", 'status' => 'success'));
+            } catch (SMException $e) {
+                return redirect('/case/' . $case->reference)->with(array('message' => "Kan ikke overføre saken til denne statusen: $e", 'status' => 'danger'));
+            }
+        } else {
+            return redirect('/case/' . $case->reference)->with(array('message' => 'Kan ikke overføre saken til denne statusen', 'status' => 'danger'));
+        }
     }
 
     /**

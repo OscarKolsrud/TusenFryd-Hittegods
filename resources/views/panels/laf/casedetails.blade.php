@@ -150,6 +150,8 @@
                         <span class="font-weight-bold">Sist redigert: </span>{{ date('d.m.Y H:s', strtotime($case->audits()->latest()->first()->getMetadata()["audit_updated_at"])) }}<br>
                         <span class="font-weight-bold">Av: </span>{{ $latestaudituser->first_name }}<br>
                     </div>
+
+
                     @if(!$statemachine->metadata('state', 'resolution'))
                     <a role="button" class="btn btn-primary btn-block" href="{{ Request::url() }}/edit">Rediger sak</a>
                     <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#deleteconfirmModal">Slett sak (Permanent)</button>
@@ -173,25 +175,48 @@
 
                     <div class="text-center">
                         <small class="font-weight-bold">Foreslåtte status endringer</small>
-                        @forelse ($statemachine->getPossibleTransitions() as $state)
-                            <a role="button" class="btn btn-{{ $statemachine->metadata('transition', $state, 'class_color') ?? 'primary' }} btn-block" href="#">{{ $statemachine->metadata('transition', $state, 'title') }}</a>
-                        @empty
-                            <button type="button" class="btn btn-secondary btn-block" disabled>Ingen forslag</button>
-                        @endforelse
+                        <form action="#" method="post">
+                            @csrf
+                            @if($statemachine->getState() == "lost")
+                                <button type="button" class="btn btn-{{ $statemachine->metadata('state', 'wait_for_delivery', 'class_color') }} btn-block" data-toggle="modal" data-target="#waitDeliveryModal">Venter på utlevering</button>
+                                <button type="submit" class="btn btn-{{ $statemachine->metadata('state', 'canceled', 'class_color') }} btn-block" formaction="/case/{{ $case->reference }}/status/cancel">Avslutt</button>
+                            @elseif($statemachine->getState() == "found")
+                                <button type="button" class="btn btn-{{ $statemachine->metadata('state', 'wait_for_delivery', 'class_color') }} btn-block" data-toggle="modal" data-target="#waitDeliveryModal">Venter på utlevering</button>
+                                <button type="submit" class="btn btn-{{ $statemachine->metadata('state', 'evicted', 'class_color') }} btn-block" formaction="/case/{{ $case->reference }}/status/evict">Kastet</button>
+                                <button type="submit" class="btn btn-{{ $statemachine->metadata('state', 'wait_for_police', 'class_color') }} btn-block" formaction="/case/{{ $case->reference }}/status/wait_for_police">Send til politi</button>
+                            @elseif($statemachine->getState() == "wait_for_police")
+                                <button type="submit" class="btn btn-{{ $statemachine->metadata('state', 'police', 'class_color') }} btn-block" formaction="/case/{{ $case->reference }}/status/police">Send til politi</button>
+                            @elseif($statemachine->getState() == "wait_for_delivery")
+                                <button type="submit" class="btn btn-{{ $statemachine->metadata('state', 'wait_for_pickup', 'class_color') }} btn-block" formaction="/case/{{ $case->reference }}/status/wait_for_pickup">Vent på henting</button>
+                                <button type="submit" class="btn btn-{{ $statemachine->metadata('state', 'wait_for_send', 'class_color') }} btn-block" formaction="/case/{{ $case->reference }}/status/wait_for_send">Vent på sending</button>
+                            @elseif($statemachine->getState() == "wait_for_send")
+                                <button type="submit" class="btn btn-{{ $statemachine->metadata('state', 'sent', 'class_color') }} btn-block" formaction="/case/{{ $case->reference }}/status/sent">Sendt</button>
+                            @elseif($statemachine->getState() == "wait_for_pickup")
+                                <button type="submit" class="btn btn-{{ $statemachine->metadata('state', 'picked_up', 'class_color') }} btn-block" formaction="/case/{{ $case->reference }}/status/picked_up">Utlevert/Hentet</button>
+                            @endif
+
+                            @if(count($case->stateHistory()->get()) > 0)
+                                <button type="submit" class="btn btn-secondary btn-block" formaction="/case/{{ $case->reference }}/status/regret">Angre til forrige status</button>
+                                <small>Bemerk: Har du slått sammen denne med en annen sak går det ikke ann å angre tilbake: statusen vil da bli feil</small>
+                            @endif
+                        </form>
                     </div>
 
                     <div class="text-center">
                         <small class="font-weight-bold">Endre status manuelt (Potensielt farlig)</small>
-                        <form action="#" method="post">
-                            @method('PUT')
+                        <form action="/case/{{ $case->reference }}/status/force" method="post">
                             @csrf
                             <div class="input-group">
-                                <select class="form-control">
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
+                                <select class="form-control" name="status">
+                                    <option value="evicted">Kastet</option>
+                                    <option value="wait_for_police">Vent: Venter på utlevering</option>
+                                    <option value="police">Send til politi</option>
+                                    <option value="canceled">Avsluttet</option>
+                                    <option value="wait_for_delivery">Venter på utlevering</option>
+                                    <option value="wait_for_send">Venter på sending</option>
+                                    <option value="sent">Sendt</option>
+                                    <option value="wait_for_pickup">Venter på henting</option>
+                                    <option value="picked_up">Hentet</option>
                                 </select>
                                 <div class="input-group-append">
                                     <button type="submit" class="btn btn-primary mb-2 float-right">Lagre</button>
@@ -277,6 +302,55 @@
                     <label for="message" class="font-weight-bold h4">Gi en liten oppsummering av hva som ble sagt/avtalt</label>
                     <textarea class="form-control" id="message" name="message" rows="3"></textarea>
                     <button type="submit" class="btn btn-primary mb-2 mt-3">Lagre</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Lukk</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Transition to waiting_for_delivery modal -->
+<div class="modal fade" id="waitDeliveryModal" tabindex="-1" role="dialog" aria-labelledby="waitDeliveryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="waitDeliveryModalLabel">Status "Venter på utlevering" krever bekreftelse</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <form action="/case/{{ $case->reference }}/status/withowner" method="post">
+                    @csrf
+                    <input type="text" name="status" value="wait_for_delivery" hidden>
+
+                    <label for="message" class="font-weight-bold h4">Legg til/bekreft kontakinformasjon</label>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Navn</label>
+                        <input type="text" class="form-control" name="owner_name" required value="{{ old('owner_name') ?? $case->owner_name }}" placeholder="Navn">
+                        @if ($errors->has('owner_name'))
+                            <span class="text-danger">{{ $errors->first('owner_name') }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Telefon</label><br>
+                        <input type="tel" class="form-control" style="width: 100%;" id="owner_phone_input" name="owner_phone_input">
+                        <span class="text-success hide" id="valid-msg">Gyldig</span>
+                        <span class="text-danger hide" id="error-msg"></span>
+                        @if ($errors->has('owner_phone'))
+                            <span class="text-danger">{{ $errors->first('owner_phone') }}</span>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">E-Post</label>
+                        <input type="text" class="form-control" name="owner_email" value="{{ old('owner_email') ?? $case->owner_email }}" placeholder="E-Post">
+                        @if ($errors->has('owner_email'))
+                            <span class="text-danger">{{ $errors->first('owner_email') }}</span>
+                        @endif
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-2 mt-3">Lagre og Oppdater</button>
                 </form>
             </div>
             <div class="modal-footer">

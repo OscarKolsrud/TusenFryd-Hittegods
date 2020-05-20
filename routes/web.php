@@ -71,6 +71,8 @@ Route::group(['middleware' => ['auth', 'activated', 'activity', 'twostep', 'chec
     //Routes for case management
     Route::prefix('case')->group(function () {
 
+        Route::get('/list/{view}/{list?}/{date?}', 'InvestigationController@list')->name('list_case');
+
         //This is the endpoints for the search function (paginated)
         Route::get('/search', 'SearchController@item_search')->name('item_search');
         Route::post('/search/show_results', 'SearchController@show_results')->name('show_results_search');
@@ -79,9 +81,6 @@ Route::group(['middleware' => ['auth', 'activated', 'activity', 'twostep', 'chec
             Route::post('/', 'InvestigationController@store_item')->name('store_item');
             Route::get('/create', 'InvestigationController@create_item')->name('create_item');
 
-            Route::get('active', function () {
-
-            });
             Route::get('today', function () {
 
             });
@@ -128,9 +127,16 @@ Route::group(['middleware' => ['auth', 'activated', 'activity', 'twostep', 'chec
 
         Route::get('{reference}/edithistory', 'InvestigationController@show_edithistory')->name('show_edithistory');
 
+        Route::get('{reference}/edit', 'InvestigationController@edit')->name('edit_case');
+        Route::put('{reference}', 'InvestigationController@update')->name('update_case');
+
         Route::post('{reference}/addconversation', 'ConversationController@store_message')->name('store_message');
 
         Route::post('{reference}/readconversation', 'ConversationController@mark_read')->name('mark_read');
+
+        Route::post('{reference}/status/force', 'InvestigationController@update_status_force')->name('update_status_force');
+        Route::post('{reference}/status/withowner', 'InvestigationController@update_status_withowner')->name('update_status_withowner');
+        Route::post('{reference}/status/{wanted}', 'InvestigationController@update_status')->name('update_status');
 
         Route::get('{reference}/link/{reference2}', 'InvestigationController@link')->name('link');
 

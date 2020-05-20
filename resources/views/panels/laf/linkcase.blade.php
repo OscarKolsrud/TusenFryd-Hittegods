@@ -359,7 +359,7 @@
             @if(!$compare_only)
                 <button type="submit" class="btn btn-primary float-right">Lagre og slå sammen</button>
                 <br><br>
-                <small class="float-right">Denne handlingen kan <span class="font-weight-bold">ikke</span> reverseres,
+                <small class="float-right">Denne handlingen kan <span class="font-weight-bold">ikke</span> reverseres/angres,
                     <br>Og vil <span class="font-weight-bold">ikke</span> generere et varsel til Gjest</small>
                 </form>
             @endif
