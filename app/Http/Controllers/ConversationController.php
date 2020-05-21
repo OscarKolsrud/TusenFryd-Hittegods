@@ -42,7 +42,7 @@ class ConversationController extends Controller
             'message' => $validated['message']
         ]);
 
-        $url = route('public_case_view', ['reference' => $case->reference]);
+        $url = route('public_case_view', ['reference' => $case->reference, 'lost_date' => $case->lost_date]);
 
         if (empty($validated["notify"])) {
             $notify = true;

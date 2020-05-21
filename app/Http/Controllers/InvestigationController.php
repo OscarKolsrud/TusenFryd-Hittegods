@@ -203,7 +203,7 @@ class InvestigationController extends Controller
 
         $inv->colors()->sync($validated['color']);
 
-        $url = route('public_case_view', ['reference' => $validated['reference']]);
+        $url = route('public_case_view', ['reference' => $validated['reference'], 'lost_date' => $validated["lost_date"]]);
 
         if (env('EMAIL_ENABLED') && isset($validated["owner_email"])) {
             Mail::to($validated["owner_email"])->queue(new NewLostNotification($inv));
