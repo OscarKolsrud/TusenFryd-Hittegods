@@ -81,11 +81,15 @@
                             Utsending/Utlevering
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item {{ Request::is('case/list/all/wait_for_delivery') ? 'active' : null }}"
+                               href="{{ route('list_case', ['list' => 'wait_for_delivery', 'view' => 'all']) }}">
+                                Venter på avtale
+                            </a>
+                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item {{ Request::is('case/list/all/wait_for_pickup') ? 'active' : null }}"
                                href="{{ route('list_case', ['list' => 'wait_for_pickup', 'view' => 'all']) }}">
                                 Venter på utlevering
                             </a>
-                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item {{ Request::is('case/list/all/wait_for_send') ? 'active' : null }}"
                                href="{{ route('list_case', ['list' => 'wait_for_send', 'view' => 'all']) }}">
                                 Venter på utsending
@@ -95,7 +99,6 @@
                                href="{{ route('list_case', ['list' => 'picked_up', 'view' => 'all']) }}">
                                 Utlevert
                             </a>
-                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item {{ Request::is('case/list/all/sent') ? 'active' : null }}"
                                href="{{ route('list_case', ['list' => 'sent', 'view' => 'all']) }}">
                                 Sendt

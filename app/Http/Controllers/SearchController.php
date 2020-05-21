@@ -9,8 +9,6 @@ use Illuminate\Http\Request;
 class SearchController extends Controller
 {
     public function item_search(Request $request) {
-
-
         if (empty($request->input('query'))) {
             $query = "";
         } else {

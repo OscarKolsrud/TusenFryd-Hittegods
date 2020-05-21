@@ -37,12 +37,12 @@ class ProcessSMS implements ShouldQueue
      */
     public function handle()
     {
-        $sender = env('SMS_SENDER');
-        $phoneNo = $this->recipent;
-        $message = $this->text;
-        $deliveryreport = "https://webhook.site/fbce1b46-6b80-4aaf-aea1-1902c4b73084";
+        $sender = urlencode(env('SMS_SENDER'));
+        $phoneNo = urlencode($this->recipent);
+        $message = urlencode($this->text);
+        $deliveryreport = urlencode("https://webhook.site/fbce1b46-6b80-4aaf-aea1-1902c4b73084");
 
-        $url = urlencode("https://admin.intouch.no/smsgateway/sendSms?sender=$sender&targetNumbers=$phoneNo&sms=$message&deliveryReportUrl=$deliveryreport");
+        $url = "https://admin.intouch.no/smsgateway/sendSms?sender=$sender&targetNumbers=$phoneNo&sms=$message&deliveryReportUrl=$deliveryreport";
 
         $response = Http::retry(3, 100)->get($url);
     }

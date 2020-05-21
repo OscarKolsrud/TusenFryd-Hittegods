@@ -19,6 +19,7 @@
                     <tr>
                         <th scope="col">Ref</th>
                         <th scope="col">Gjenstand</th>
+                        <th scope="col">Kategori</th>
                         <th scope="col">Beskrivelse</th>
                         <th scope="col">Mistet/funnet dato</th>
                     </tr>
@@ -28,6 +29,7 @@
                     <tr>
                         <th scope="row"><a href="{{ route('show_case', ['reference' => $case->reference]) }}">{{ $case->reference }}</a></th>
                         <td>{{ $case->item }}</td>
+                        <td>{{ $case->category->category_name }}</td>
                         <td>{{ Str::limit($case->description, 50) }}</td>
                         <td>{{ date('d.m.Y', strtotime($case->lost_date)) }}</td>
                     </tr>

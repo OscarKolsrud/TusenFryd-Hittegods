@@ -20,7 +20,7 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
     Route::get('/', 'WelcomeController@welcome')->name('welcome');
     Route::get('/terms', 'TermsController@terms')->name('terms');
 
-    Route::get('/v/{reference}', 'InvestigationController@public_view')->name('public_case_view');
+    Route::get('/v/{reference}/{lost_date}', 'InvestigationController@public_view')->name('public_case_view');
 
     //Signed URLs that are "public"
     Route::post('{reference}/images', 'InvestigationController@store_images')->name('store_images');
@@ -31,7 +31,7 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
 Auth::routes(['register' => false]);
 
 // Public Routes
-Route::group(['middleware' => ['web', 'activity', 'checkblocked']], function () {
+Route::group(['middleware' => ['web', 'checkblocked']], function () {
 
     // Activation Routes
     Route::get('/activate', ['as' => 'activate', 'uses' => 'Auth\ActivateController@initial']);
@@ -49,7 +49,7 @@ Route::group(['middleware' => ['web', 'activity', 'checkblocked']], function () 
 });
 
 // Registered and Activated User Routes
-Route::group(['middleware' => ['auth', 'activated', 'activity', 'checkblocked']], function () {
+Route::group(['middleware' => ['auth', 'activated', 'checkblocked']], function () {
 
     // Activation Routes
     Route::get('/activation-required', ['uses' => 'Auth\ActivateController@activationRequired'])->name('activation-required');
@@ -57,7 +57,7 @@ Route::group(['middleware' => ['auth', 'activated', 'activity', 'checkblocked']]
 });
 
 // Registered and Activated User Routes
-Route::group(['middleware' => ['auth', 'activated', 'activity', 'twostep', 'checkblocked']], function () {
+Route::group(['middleware' => ['auth', 'activated', 'twostep', 'checkblocked']], function () {
 
     //  Homepage Route - Redirect based on user role is in controller.
     Route::get('/home', ['as' => 'public.home',   'uses' => 'UserController@index']);
@@ -145,7 +145,7 @@ Route::group(['middleware' => ['auth', 'activated', 'activity', 'twostep', 'chec
 });
 
 // Registered, activated, and is current user routes.
-Route::group(['middleware' => ['auth', 'activated', 'currentUser', 'activity', 'twostep', 'checkblocked']], function () {
+Route::group(['middleware' => ['auth', 'activated', 'currentUser', 'twostep', 'checkblocked']], function () {
 
     // User Profile and Account Routes
     Route::resource(

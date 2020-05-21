@@ -53,14 +53,14 @@ class ConversationController extends Controller
         }
 
         if (env('EMAIL_ENABLED') && isset($case->owner_email) && $notify) {
-            Mail::to($case->owner_email)->queue(new NewMessageNotification());
+            Mail::to($case->owner_email)->queue(new NewMessageNotification($case));
         }
 
         if (env('SMS_ENABLED') && isset($case->owner_phone) && $notify) {
             if ($validated['messagetype'] == 'message') {
-                $text = "Hei ". $case->owner_name ."Vi har sendt deg en my melding i relasjon til sak ". $case->reference .". Vi setter pris på om du sjekker den. Du kan vise den her ". $url ." Vi ønsker deg en frydefull dag! Mvh Gjesteservice Tusenfryd";
+                $text = "Hei ". $case->owner_name .", Vi har sendt deg en my melding i relasjon til sak ". $case->reference .". Vi setter pris på om du sjekker den. Du kan vise den her ". $url ." Vi ønsker deg en frydefull dag! Mvh Gjesteservice Tusenfryd";
             } elseif ($validated['messagetype'] == 'phone') {
-                $text = "Hei ". $case->owner_name ."Vi har nettopp forsøkt å ringe deg i relasjon til sak". $case->reference .". Du kan gjerne ringe oss opp dersom dette passer deg, ellers kan vise saken her ". $url ." Vi ønsker deg en frydefull dag! Mvh Gjesteservice Tusenfryd";
+                $text = "Hei ". $case->owner_name .", Vi har nettopp forsøkt å ringe deg i relasjon til sak". $case->reference .". Du kan gjerne ringe oss opp dersom dette passer deg, ellers kan vise saken her ". $url ." Vi ønsker deg en frydefull dag! Mvh Gjesteservice Tusenfryd";
             }
 
             $recipent = $case->owner_phone;

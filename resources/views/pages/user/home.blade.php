@@ -55,7 +55,7 @@
                     }
                 }).then(function (response) {
                     console.log(response);
-                    var pageCount = response.data.total;
+                    var pageCount = response.data.last_page;
 
                     //Disable the function call for a second
                     var callable = false;

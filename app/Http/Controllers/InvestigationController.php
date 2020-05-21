@@ -206,13 +206,13 @@ class InvestigationController extends Controller
         $url = route('public_case_view', ['reference' => $validated['reference']]);
 
         if (env('EMAIL_ENABLED') && isset($validated["owner_email"])) {
-            Mail::to($validated["owner_email"])->queue(new NewLostNotification());
+            Mail::to($validated["owner_email"])->queue(new NewLostNotification($inv));
 
             $txt = "Etterlysningen ble opprettet og et varsel ble sendt via E-Post til gjest";
         }
 
         if (env('SMS_ENABLED') && isset($validated["owner_phone"])) {
-            $text = "Hei ". $validated['owner_name'] ."Det har blitt opprettet en etterlysning med refereanse ". $validated['reference'] .". Du kan vise den her ". $url ." . På linken kan du også laste opp bilder for å hjelpe oss å finne din savnede eiendel. Vi ønsker deg en frydefull dag! Mvh Gjesteservice Tusenfryd";
+            $text = "Hei ". $validated['owner_name'] .", Det har blitt opprettet en etterlysning med refereanse ". $validated['reference'] .". Du kan vise den her ". $url ." . På linken kan du også laste opp bilder for å hjelpe oss å finne din savnede eiendel. Vi ønsker deg en frydefull dag! Mvh Gjesteservice Tusenfryd";
             $recipent = $validated["owner_phone"];
 
             ProcessSMS::dispatchAfterResponse($recipent, $text);
@@ -249,6 +249,23 @@ class InvestigationController extends Controller
             'case' => $case,
             'statemachine' => StateMachine::get($case, 'investigation'),
             'latestaudituser' => User::find($case->audits()->latest()->first()->getMetadata()["user_id"]),
+            'media' => $case->getMedia('caseimages')->sortByDesc('id'),
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function public_view($id, $lostdate)
+    {
+        $case = Investigation::where('reference', $id)->where('lost_date', $lostdate)->firstOrFail();
+
+        return view('pages.public.caseview', [
+            'case' => $case,
+            'statemachine' => StateMachine::get($case, 'investigation'),
             'media' => $case->getMedia('caseimages')->sortByDesc('id'),
         ]);
     }

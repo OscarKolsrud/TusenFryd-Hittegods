@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Investigation;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -11,14 +12,16 @@ class NewLostNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $investigation;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Investigation $investigation)
     {
-        //
+        $this->investigation = $investigation;
     }
 
     /**
@@ -28,6 +31,7 @@ class NewLostNotification extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.newlost-notification');
+        return $this->markdown('emails.newlost-notification')
+                    ->subject('Ny etterlysning opprettet');
     }
 }
