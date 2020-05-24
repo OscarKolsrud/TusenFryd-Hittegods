@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     default-mysql-client \
     libpng-dev \
     libjpeg62-turbo-dev \
+    libjpeg-dev \
     libfreetype6-dev \
     libmagickwand-dev \
     libzip-dev \
@@ -22,6 +23,13 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # Installing extensions
 RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath opcache
 RUN docker-php-ext-enable imagick
+
+RUN apt-get update && apt-get install -y \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd
 
 # Installing composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

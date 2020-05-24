@@ -203,7 +203,7 @@ class InvestigationController extends Controller
 
         $inv->colors()->sync($validated['color']);
 
-        $url = route('public_case_view', ['reference' => $validated['reference'], 'lost_date' => $validated["lost_date"]]);
+        $url = route('public_case_view', ['reference' => $validated['reference'], 'lost_date' => $inv->lost_date]);
 
         if (env('EMAIL_ENABLED') && isset($validated["owner_email"])) {
             Mail::to($validated["owner_email"])->queue(new NewLostNotification($inv));
@@ -265,9 +265,60 @@ class InvestigationController extends Controller
 
         return view('pages.public.caseview', [
             'case' => $case,
+            'messages' => Conversation::where('investigation_id', $case->id)->orderBy('created_at', 'desc')->paginate(5),
             'statemachine' => StateMachine::get($case, 'investigation'),
             'media' => $case->getMedia('caseimages')->sortByDesc('id'),
         ]);
+    }
+
+    public function public_edit(Request $request, $id, $lostdate)
+    {
+        if (! $request->hasValidSignature()) {
+            abort(401);
+        }
+
+        $validated = $request->validate([
+            'owner_name' => 'required',
+            'owner_email' => 'required_without:owner_phone|email|nullable',
+            'owner_phone' => 'required_without:owner_email|phone:auto|nullable',
+        ], [
+            'owner_name.required' => 'Et navn kreves',
+            'owner_email.required_without' => 'Enten en E-Post eller et telefonnummer kreves',
+            'owner_email.email' => 'E-Posten er ikke gyldig',
+            'owner_phone.required_without' => 'Enten en E-Post eller et telefonnummer kreves',
+            'owner_phone.phone' => 'Telefonnummeret er ugyldig'
+        ]);
+
+        $case = Investigation::where('reference', $id)->where('lost_date', $lostdate)->firstOrFail();
+
+        $case->update($validated);
+
+        $case->save();
+
+        $conv = Conversation::create([
+            'investigation_id' => $case->id,
+            'messagetype' => 'notification',
+            'from_guest' => false,
+            'message' => "Gjesten oppdaterte sin kontaktinformasjon"
+        ]);
+
+        return redirect(route('public_case_view', ['reference' => $case->reference, 'lost_date' => $case->lost_date]))->with(array('message' => 'Endringene ble lagret', 'status' => 'success'));
+    }
+
+    public function public_delete(Request $request, $id, $lostdate) {
+        if (! $request->hasValidSignature()) {
+            abort(401);
+        }
+
+        $case = Investigation::where('reference', $id)->where('lost_date', $lostdate)->firstOrFail();
+
+        $case->colors()->detach();
+
+        Conversation::where('investigation_id', $case->id)->delete();
+
+        $case = Investigation::where('reference', $id)->delete();
+
+        return redirect()->away('https://tusenfryd.no');
     }
 
     /**
@@ -343,6 +394,7 @@ class InvestigationController extends Controller
         Conversation::create([
             'investigation_id' => $case->id,
             'messagetype' => 'notification',
+            'processed' => $from_guest,
             'from_guest' => $from_guest,
             'message' => "Det ble lastet opp nye bilder"
         ]);
@@ -599,6 +651,8 @@ class InvestigationController extends Controller
         $case = Investigation::where('reference', $id)->firstorFail();
 
         $case->update($update);
+
+        $case->save();
 
         return redirect('/case/' . $case->reference)->with(array('message' => "Endringene ble lagret", 'status' => 'success'));
     }

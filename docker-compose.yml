@@ -4,6 +4,7 @@ services:
   nginx-proxy:
     container_name: nginx-proxy
     image: jwilder/nginx-proxy
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
@@ -21,6 +22,7 @@ services:
   nginx-proxy-letsencrypt:
     container_name: nginx-proxy-letsencrypt
     image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: unless-stopped
     volumes:
       - ".cloud/rproxy/conf.d:/etc/nginx/conf.d"
       - ".cloud/rproxy/certs:/etc/nginx/certs:rw"
@@ -41,6 +43,7 @@ services:
   hittegods-server:
     build: .cloud/docker
     image: hittegods-serverimg
+    restart: unless-stopped
     depends_on:
       - mysql
       - nginx-proxy
@@ -52,6 +55,7 @@ services:
 
   web:
     image: nginx:stable-alpine
+    restart: unless-stopped
     environment:
       - VIRTUAL_HOST=docker-1.mistet.no
       - LETSENCRYPT_HOST=docker-1.mistet.no
@@ -70,6 +74,7 @@ services:
     container_name: database
     image: mysql:8
     command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD=pLJ!3?2Z9z+MbnRHNf
       - MYSQL_DATABASE=hittegods
@@ -84,28 +89,11 @@ services:
   elasticsearch:
     container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+    restart: unless-stopped
     environment:
       - discovery.type=single-node
     volumes:
     - es01:/usr/share/elasticsearch/data
-    networks:
-      - app-network
-
-  minio:
-    container_name: minio
-    image: minio/minio
-    environment:
-      - VIRTUAL_HOST=s.docker-1.mistet.no
-      - VIRTUAL_PORT=9000
-      - LETSENCRYPT_HOST=s.docker-1.mistet.no
-      - LETSENCRYPT_EMAIL=oscar@kolsrudweb.no
-      - MINIO_ACCESS_KEY=vs8HpUcJ7Uru5YSne9kYepdS4tMhjPae
-      - MINIO_SECRET_KEY=Geax8Gcz894d5zK4jwpDxauMMsvG3UfKQqrXfDbQfQ2grbVr
-    depends_on:
-      - nginx-proxy
-      - nginx-proxy-letsencrypt
-    volumes:
-    - .cloud/minio:/data
     networks:
       - app-network
 

@@ -21,6 +21,9 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
     Route::get('/terms', 'TermsController@terms')->name('terms');
 
     Route::get('/v/{reference}/{lost_date}', 'InvestigationController@public_view')->name('public_case_view');
+    Route::delete('/v/{reference}/{lost_date}', 'InvestigationController@public_delete')->name('public_case_delete');
+    Route::post('/v/{reference}/{lost_date}/message', 'ConversationController@store_message_public')->name('public_case_message');
+    Route::post('/v/{reference}/{lost_date}/edit', 'InvestigationController@public_edit')->name('public_case_edit_contact');
 
     //Signed URLs that are "public"
     Route::post('{reference}/images', 'InvestigationController@store_images')->name('store_images');

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Conversation extends Model
 {
     protected $fillable = ['investigation_id', 'messagetype', 'from_guest',
-        'user_id', 'message'];
+        'user_id', 'message', 'processed'];
 
     public function user() {
         return $this->belongsTo(User::class);

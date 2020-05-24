@@ -204,7 +204,6 @@
         }
 
         function deleteImage(id) {
-            //TODO: FIX THIS!
             var linkref = document.getElementById('delete-' + id);
 
             var deleteUrl = linkref.dataset.deleteurl;

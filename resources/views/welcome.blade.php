@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel Auth</title>
+        <title>TusenFryd Hittegods</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -72,32 +72,26 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
-                        <a href="{{ url('/home') }}">Home</a>
+                        <a href="{{ url('/home') }}">Gå til systemet</a>
                     @else
-                        <a href="{{ route('login') }}">Login</a>
+                        <a href="{{ route('login') }}">Logg inn</a>
 
                         @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
+                            <a href="{{ route('register') }}">Registrer</a>
                         @endif
                     @endauth
                 </div>
             @endif
             <div class="content">
                 <div class="title m-b-md">
-                    {!! trans('titles.app') !!}<br />
-                    <small>
-                        {{ trans('titles.app2', ['version' => config('settings.app_project_version')]) }}
-                    </small>
+                    @if (session('case_deleted'))
+                        <small style="color: red;">Saken ble slettet, du kan nå lukke denne fanen</small><br>
+                    @endif
+                    TusenFryd Hittegods<br />
                 </div>
                 <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://vapor.laravel.com">Vapor</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                    <a target="_blank" href="https://tusenfryd.no">TusenFryd.no</a>
+                    <a target="_blank" href="https://en-tur.no/">Entur/ruter</a>
                 </div>
             </div>
         </div>

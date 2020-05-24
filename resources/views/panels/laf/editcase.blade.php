@@ -87,7 +87,7 @@
                 </div>
             </div>
             <hr>
-            @if($case->status == "found" || "wait_for_delivery" || "wait_for_police" || "wait_for_send" || "wait_for_pickup")
+            @if($case->status == "found" || $case->status == "wait_for_delivery" || $case->status == "wait_for_police" || $case->status == "wait_for_send" || $case->status == "wait_for_pickup")
                 <input type="text" name="require_locationpos" value="true" hidden>
                 <div class="form-group row">
                     <label for="location_id" class="col col-form-label font-weight-bold">Lager pos*</label>
@@ -105,7 +105,7 @@
                 </div>
                 <hr>
             @endif
-            @if($case->status == "lost" || "wait_for_delivery" || "wait_for_police" || "wait_for_send" || "wait_for_pickup")
+            @if($case->status == "lost" || $case->status == "wait_for_delivery" || $case->status == "wait_for_police" || $case->status == "wait_for_send" || $case->status == "wait_for_pickup")
                 <input type="text" name="require_names" value="true" hidden>
                 <div class="form-group row">
                 <label for="owner_name" class="col col-form-label font-weight-bold">Navn*</label>

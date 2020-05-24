@@ -85,6 +85,10 @@
                     <span>Ingen ubehandlede meldinger 🎉</span>
                 </div>
             @endforelse
+
+            <div class="mt-3 d-flex justify-content-center">
+                {{ $unread->links() }}
+            </div>
         </div>
     </div>
 </div>

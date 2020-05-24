@@ -21,7 +21,7 @@
     {{-- Footer --}}
     @slot('footer')
         @component('mail::footer')
-            &copy; {{ date('Y') }} Tusenfryd. Alle rettigheter reservert
+            &copy; {{ date('Y') }} TusenFryd. Alle rettigheter reservert
         @endcomponent
     @endslot
 @endcomponent

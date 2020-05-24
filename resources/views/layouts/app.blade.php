@@ -10,7 +10,7 @@
 
         <title>@hasSection('template_title')@yield('template_title') | @endif {{ config('app.name', Lang::get('titles.app')) }}</title>
         <meta name="description" content="">
-        <meta name="author" content="Jeremy Kenedy">
+        <meta name="author" content="TusenFryd AS">
         <link rel="shortcut icon" href="/favicon.ico">
 
         {{-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries --}}
@@ -29,13 +29,6 @@
 
         <style type="text/css">
             @yield('template_fastload_css')
-
-            @if (Auth::User() && (Auth::User()->profile) && (Auth::User()->profile->avatar_status == 0))
-                .user-avatar-nav {
-                    background: url({{ Gravatar::get(Auth::user()->email) }}) 50% 50% no-repeat;
-                    background-size: auto 100%;
-                }
-            @endif
 
         </style>
 

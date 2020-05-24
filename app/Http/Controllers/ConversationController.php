@@ -71,6 +71,37 @@ class ConversationController extends Controller
         return redirect('/case/' . $case->reference)->with(array('message' => 'Hendelse/Melding ble lagret', 'status' => 'success'));
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store_message_public(Request $request, $reference, $lost_date)
+    {
+        if (! $request->hasValidSignature()) {
+            abort(401);
+        }
+
+        $validated = $request->validate([
+            'message' => 'required',
+        ], [
+            'message.required' => 'Det kreves en melding',
+        ]);
+
+        $case = Investigation::where('reference', $reference)->where('lost_date', $lost_date)->firstOrFail();
+
+        $inv = Conversation::create([
+            'investigation_id' => $case->id,
+            'messagetype' => 'message',
+            'processed' => false,
+            'from_guest' => true,
+            'message' => $validated['message']
+        ]);
+
+        return redirect(route('public_case_view', ['reference' => $case->reference, 'lost_date' => $case->lost_date]))->with(array('message' => 'Meldingen ble lagret og vil bli behandlet', 'status' => 'success'));
+    }
+
     public function mark_read(Request $request) {
         $validated = $request->validate([
             'message' => 'required_without_all:all,case|exists:conversations,id|nullable',

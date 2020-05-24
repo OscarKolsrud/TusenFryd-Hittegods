@@ -34,7 +34,7 @@ class UserController extends Controller
 
 
         return view('pages.user.home', [
-            'unread' => Conversation::where('processed', 0)->orderBy('created_at', 'desc')->get(),
+            'unread' => Conversation::where('processed', 0)->orderBy('created_at', 'desc')->orderBy('created_at', 'desc')->paginate(5),
         ]);
     }
 }

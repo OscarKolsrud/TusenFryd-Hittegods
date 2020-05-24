@@ -10,11 +10,11 @@
         <div class="carousel-inner">
             @foreach($media as $object)
                 <div class="carousel-item @if ($loop->first)active @endif">
-                    <img src="{{ $object->getTemporaryUrl(\Carbon\Carbon::now()->addMinutes(15), 'displayversion') }}" class="d-block w-100" alt="Bilde">
+                    <img src="{{ $object->getUrl('displayversion') }}" class="d-block w-100" alt="Bilde">
                     <div class="carousel-caption d-none d-md-block">
                         <span class="badge badge-pill badge-dark">Lastet opp: {{ date('d.m.Y H:s', strtotime($object->created_at)) }}</span><br>
                         <div class="btn-group" role="group" aria-label="Bildehandlinger">
-                            <a role="button" class="btn btn-sm btn-primary" target="_blank" href="{{ $object->getTemporaryUrl(\Carbon\Carbon::now()->addMinutes(60)) }}"><i class="fa Example of external-link fa-external-link" aria-hidden="true"></i> Åpne i ny fane</a>
+                            <a role="button" class="btn btn-sm btn-primary" target="_blank" href="{{ $object->getFullUrl() }}"><i class="fa Example of external-link fa-external-link" aria-hidden="true"></i> Åpne i ny fane</a>
                             @auth <button type="button" class="btn btn-sm  btn-danger" id="delete-{{ $object->getPath() }}" onclick="deleteImage('{{ $object->getPath() }}');" data-deleteurl="{{ URL::temporarySignedRoute('destroy_image', now()->addMinutes(60), ['reference' => $case->reference, 'image' => $object->id]) }}"><i class="fa fa-trash" aria-hidden="true"></i> Slett</button> @endauth
                         </div>
                     </div>

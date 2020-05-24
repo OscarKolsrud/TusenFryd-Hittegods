@@ -1,0 +1,1 @@
+Tabell som viser de 5 siste viste sakene for en bruker
