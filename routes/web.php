@@ -150,6 +150,35 @@ Route::group(['middleware' => ['auth', 'activated', 'twostep', 'checkblocked']],
 // Registered, activated, and is current user routes.
 Route::group(['middleware' => ['auth', 'activated', 'currentUser', 'twostep', 'checkblocked']], function () {
 
+    //LAF Routes
+    Route::prefix('laf')->group(function () {
+        //Category management
+        Route::prefix('category')->group(function () {
+            Route::get('/', 'CategoryController@show')->name('category_show_admin');
+            Route::get('/new', 'CategoryController@create')->name('category_create_admin');
+            Route::post('/new', 'CategoryController@store')->name('category_store_admin');
+            Route::get('/{id}', 'CategoryController@edit')->name('category_edit_admin');
+            Route::post('/{id}', 'CategoryController@update')->name('category_edit_store_admin');
+        });
+
+        //Color management
+        Route::prefix('color')->group(function () {
+            Route::get('/', 'ColorController@show')->name('color_show_admin');
+            Route::get('/new', 'ColorController@create')->name('color_create_admin');
+            Route::post('/new', 'ColorController@store')->name('color_store_admin');
+            Route::get('/{id}', 'ColorController@edit')->name('color_edit_admin');
+            Route::post('/{id}', 'ColorController@update')->name('color_edit_store_admin');
+        });
+
+        Route::prefix('location')->group(function () {
+            Route::get('/', 'LocationController@show')->name('location_show_admin');
+            Route::get('/new', 'LocationController@create')->name('location_create_admin');
+            Route::post('/new', 'LocationController@store')->name('location_store_admin');
+            Route::get('/{id}', 'LocationController@edit')->name('location_edit_admin');
+            Route::post('/{id}', 'LocationController@update')->name('location_edit_store_admin');
+        });
+    });
+
     // User Profile and Account Routes
     Route::resource(
         'profile',

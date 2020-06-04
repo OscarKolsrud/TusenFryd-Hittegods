@@ -114,6 +114,21 @@
                         Admin
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item {{ (Request::is('category/*') || Request::is('category')) ? 'active' : null }}"
+                           href="{{ route('category_show_admin') }}">
+                            LAF: Kategorier
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item {{ (Request::is('color/*') || Request::is('color')) ? 'active' : null }}"
+                           href="{{ route('color_show_admin') }}">
+                            LAF: Farger
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item {{ (Request::is('location/*') || Request::is('location')) ? 'active' : null }}"
+                           href="{{ route('location_show_admin') }}">
+                            LAF: Lokasjoner
+                        </a>
+                        <div class="dropdown-divider"></div>
                         <a class="dropdown-item {{ (Request::is('roles') || Request::is('permissions')) ? 'active' : null }}"
                            href="{{ route('laravelroles::roles.index') }}">
                             Rolle Administrasjon
