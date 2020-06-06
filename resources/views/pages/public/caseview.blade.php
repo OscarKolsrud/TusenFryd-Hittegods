@@ -81,7 +81,7 @@
         <div class="mb-3">
             <span class="font-weight-bold">Nåværende status: </span><span class="badge badge-{{ $statemachine->metadata('state','class_color') }}">{{ $statemachine->metadata('state','title') }}</span><br>
         </div>
-        <p class="lead">Under finner du hva vi har registrert om deg, og gjenstanden du har mistet. For å hjelpe oss å finne gjenstanden din kan du også <b>laste opp bilder</b> og <b>sende oss meldinger</b>. Meldinger kan ha <b>lang behandlingstid</b>, og det hjelper <b>ikke</b> sende flere.</p>
+        <p class="lead">Under finner du hva vi har registrert om deg, og gjenstanden du har mistet. For å hjelpe oss å finne gjenstanden din kan du også <b>laste opp bilder</b> og <b>sende oss meldinger</b>. Det kan ta noe tid før meldinger du sender blir besvart. Vi setter stor pris på din tålmodighet!</p>
     </div>
 
     @include('partials.form-status')

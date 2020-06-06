@@ -58,9 +58,9 @@ class ConversationController extends Controller
 
         if (env('SMS_ENABLED') && isset($case->owner_phone) && $notify) {
             if ($validated['messagetype'] == 'message') {
-                $text = "Hei ". $case->owner_name .", Vi har sendt deg en my melding i relasjon til sak ". $case->reference .". Vi setter pris på om du sjekker den. Du kan vise den her ". $url ." Vi ønsker deg en frydefull dag! Mvh Gjesteservice Tusenfryd";
+                $text = "Hei ". $case->owner_name .", Vi har sendt deg en ny melding i relasjon til sak ". $case->reference .". Vi setter pris på om du sjekker den. Du kan vise den her ". $url ." Vi ønsker deg en frydefull dag! Mvh Gjesteservice TusenFryd";
             } elseif ($validated['messagetype'] == 'phone') {
-                $text = "Hei ". $case->owner_name .", Vi har nettopp forsøkt å ringe deg i relasjon til sak". $case->reference .". Du kan gjerne ringe oss opp dersom dette passer deg, ellers kan vise saken her ". $url ." Vi ønsker deg en frydefull dag! Mvh Gjesteservice Tusenfryd";
+                $text = "Hei ". $case->owner_name .", Vi har nettopp forsøkt å ringe deg i relasjon til sak". $case->reference .". Du kan gjerne ringe oss opp dersom dette passer deg, ellers kan vise saken her ". $url ." Vi ønsker deg en frydefull dag! Mvh Gjesteservice TusenFryd";
             }
 
             $recipent = $case->owner_phone;
@@ -99,7 +99,7 @@ class ConversationController extends Controller
             'message' => $validated['message']
         ]);
 
-        return redirect(route('public_case_view', ['reference' => $case->reference, 'lost_date' => $case->lost_date]))->with(array('message' => 'Meldingen ble lagret og vil bli behandlet', 'status' => 'success'));
+        return redirect(route('public_case_view', ['reference' => $case->reference, 'lost_date' => $case->lost_date]))->with(array('message' => 'Meldingen ble lagret og vil bli behandlet så snart som mulig', 'status' => 'success'));
     }
 
     public function mark_read(Request $request) {

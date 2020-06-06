@@ -212,7 +212,7 @@ class InvestigationController extends Controller
         }
 
         if (env('SMS_ENABLED') && isset($validated["owner_phone"])) {
-            $text = "Hei ". $validated['owner_name'] .", Det har blitt opprettet en etterlysning med refereanse ". $validated['reference'] .". Du kan vise den her ". $url ." . På linken kan du også laste opp bilder for å hjelpe oss å finne din savnede eiendel. Vi ønsker deg en frydefull dag! Mvh Gjesteservice Tusenfryd";
+            $text = "Hei ". $validated['owner_name'] .", Det har blitt opprettet en etterlysning med refereanse ". $validated['reference'] .". Du kan vise den her ". $url ." . På linken kan du også laste opp bilder for å hjelpe oss å finne din savnede eiendel. Vi ønsker deg en frydefull dag! Mvh Gjesteservice TusenFryd";
             $recipent = $validated["owner_phone"];
 
             ProcessSMS::dispatchAfterResponse($recipent, $text);
