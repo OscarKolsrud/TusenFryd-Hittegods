@@ -60,7 +60,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label for="description" class="col col-form-label font-weight-bold">Beskrivelse*</label>
+                <label for="description" class="col col-form-label font-weight-bold">Beskrivelse* <br><small>Interne notater: Benytt krøllparentes rundt f.eks {tekst}</small></label>
                 <div class="col-10">
                     <textarea type="text" class="form-control" id="description" name="description" placeholder="Beskriv gjenstanden, inkluder gjerne bruksmerker, bakgrunner ol." rows="4" required>{{ old('description') ?? $case->description }}</textarea>
                     @if ($errors->has('description'))
@@ -108,35 +108,35 @@
             @if($case->status == "lost" || $case->status == "wait_for_delivery" || $case->status == "wait_for_police" || $case->status == "wait_for_send" || $case->status == "wait_for_pickup")
                 <input type="text" name="require_names" value="true" hidden>
                 <div class="form-group row">
-                <label for="owner_name" class="col col-form-label font-weight-bold">Navn*</label>
-                <div class="col-10">
-                    <input type="text" class="form-control" id="owner_name" name="owner_name" placeholder="Ola Nordmann" value="{{ old('owner_name') ?? $case->owner_name }}" required>
-                    @if ($errors->has('owner_name'))
-                        <span class="text-danger">{{ $errors->first('owner_name') }}</span>
-                    @endif
+                    <label for="owner_name" class="col col-form-label font-weight-bold">Navn*</label>
+                    <div class="col-10">
+                        <input type="text" class="form-control" id="owner_name" name="owner_name" placeholder="Ola Nordmann" value="{{ old('owner_name') ?? $case->owner_name }}" required>
+                        @if ($errors->has('owner_name'))
+                            <span class="text-danger">{{ $errors->first('owner_name') }}</span>
+                        @endif
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label for="owner_phone" class="col col-form-label font-weight-bold">Telefon**</label>
-                <div class="col-10">
-                    <input type="tel" class="form-control" id="owner_phone_input" name="owner_phone_input" value="{{ old('owner_phone') ?? $case->owner_phone }}">
-                    <span class="text-success hide" id="valid-msg">Gyldig</span>
-                    <span class="text-danger hide" id="error-msg"></span>
-                    @if ($errors->has('owner_phone'))
-                        <span class="text-danger">{{ $errors->first('owner_phone') }}</span>
-                    @endif
+                <div class="form-group row">
+                    <label for="owner_phone" class="col col-form-label font-weight-bold">Telefon**</label>
+                    <div class="col-10">
+                        <input type="tel" class="form-control" id="owner_phone_input" name="owner_phone_input" value="{{ old('owner_phone') ?? $case->owner_phone }}">
+                        <span class="text-success hide" id="valid-msg">Gyldig</span>
+                        <span class="text-danger hide" id="error-msg"></span>
+                        @if ($errors->has('owner_phone'))
+                            <span class="text-danger">{{ $errors->first('owner_phone') }}</span>
+                        @endif
+                    </div>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label for="owner_email" class="col col-form-label font-weight-bold">E-Post**</label>
-                <div class="col-10">
-                    <input type="text" class="form-control" id="owner_email" name="owner_email" placeholder="ola@nordmann.com" value="{{ old('owner_email') ?? $case->owner_email }}">
-                    @if ($errors->has('owner_email'))
-                        <span class="text-danger">{{ $errors->first('owner_email') }}</span>
-                    @endif
+                <div class="form-group row">
+                    <label for="owner_email" class="col col-form-label font-weight-bold">E-Post**</label>
+                    <div class="col-10">
+                        <input type="text" class="form-control" id="owner_email" name="owner_email" placeholder="ola@nordmann.com" value="{{ old('owner_email') ?? $case->owner_email }}">
+                        @if ($errors->has('owner_email'))
+                            <span class="text-danger">{{ $errors->first('owner_email') }}</span>
+                        @endif
+                    </div>
                 </div>
-            </div>
-            <hr>
+                <hr>
             @endif
             <div class="form-group row">
                 <label for="additional_info" class="col col-form-label font-weight-bold">Annen info <br><small>F.eks Adresse</small></label>

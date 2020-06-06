@@ -93,10 +93,10 @@
             <p>{{ $case->item ?? 'Ikke spesifisert' }}</p>
             <hr>
             <h5>Beskrivelse</h5>
-            <p>{{ $case->description ?? 'Ikke spesifisert' }}</p>
+            <p>{{ preg_replace("/{([^}]*)}/","",$case->description) ?? 'Ikke spesifisert' }}</p>
             <hr>
             <h5>Annen informasjon/notater</h5>
-            <p>{{ $case->additional_info ?? 'Ikke spesifisert' }}</p>
+            <p>{{ preg_replace("/{([^}]*)}/","",$case->additional_info) ?? 'Ikke spesifisert' }}</p>
             <hr>
             <h5>Kategori</h5>
             <p>{{ $case->category->category_name ?? 'Ikke spesifisert' }} ({{ $case->category->description ?? 'Ingen beskrivelse' }})</p>
