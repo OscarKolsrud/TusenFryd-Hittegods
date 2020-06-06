@@ -72,7 +72,7 @@ return [
             ],
             'evicted' => [
                 'from' => ['wait_for_delivery', 'found', 'wait_for_send', 'wait_for_pickup'],
-                'to' => 'canceled',
+                'to' => 'evicted',
                 'metadata' => ['title' => 'Kast', 'class_color' => 'danger', 'colorcode' => '#FF0000']
             ],
             'wait_for_police' => [
@@ -139,6 +139,11 @@ return [
             'regret_to_wait_for_pickup' => [
                 'from' => ['picked_up'],
                 'to' => 'wait_for_pickup',
+                'metadata' => ['title' => 'Angre til forrige status', 'class_color' => 'secondary', 'colorcode' => '#D3D3D3']
+            ],
+            'regret_to_police' => [
+                'from' => ['wait_for_police'],
+                'to' => 'police',
                 'metadata' => ['title' => 'Angre til forrige status', 'class_color' => 'secondary', 'colorcode' => '#D3D3D3']
             ],
         ],

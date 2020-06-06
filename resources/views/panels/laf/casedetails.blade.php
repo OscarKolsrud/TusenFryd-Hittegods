@@ -32,20 +32,20 @@
                             @include('panels.laf.imagecarousel')
                         </div>
                         @if(!$statemachine->metadata('state', 'resolution'))
-                        <form action="{{ URL::temporarySignedRoute('store_images', now()->addMinutes(60), ['reference' => $case->reference]) }}" method="post" class="dropzone" id="image-dropzone" enctype="multipart/form-data">
-                            @csrf
+                            <form action="{{ URL::temporarySignedRoute('store_images', now()->addMinutes(60), ['reference' => $case->reference]) }}" method="post" class="dropzone" id="image-dropzone" enctype="multipart/form-data">
+                                @csrf
                                 <div class="dz-message needsclick">
                                     <span class="font-weight-bold">Dra filer hit eller klikk for å laste opp</span><br>
                                     <span class="font-weight-bold">Maksimalt 5 filer pr. opplastning</span>
                                 </div>
 
-                            <input type="text" name="from_guest" value="false" required hidden>
-                        </form>
-                        <div class="text-center mt-3">
-                            <button type="button" class="btn btn-primary mb-2" id="submitImages">Last opp nye bilder</button>
-                            <br>
-                            <small class="font-italic">Dette vil ikke varsle Gjesten</small>
-                        </div>
+                                <input type="text" name="from_guest" value="false" required hidden>
+                            </form>
+                            <div class="text-center mt-3">
+                                <button type="button" class="btn btn-primary mb-2" id="submitImages">Last opp nye bilder</button>
+                                <br>
+                                <small class="font-italic">Dette vil ikke varsle Gjesten</small>
+                            </div>
                         @endif
                     </div>
                     <hr>
@@ -58,8 +58,8 @@
                         @endforelse
                         <br>
                         @if($case->initial_state == 'found')
-                        <span class="font-weight-bold">Tilstandsbeskrivelse: </span>{{ $case->condition ?? 'Ikke registrert' }}
-                        <br>
+                            <span class="font-weight-bold">Tilstandsbeskrivelse: </span>{{ $case->condition ?? 'Ikke registrert' }}
+                            <br>
                         @endif
                         <span data-toggle="tooltip" data-html="true" data-placement="bottom" title="<b>Beskrivelse: </b>{{ $case->category->description }}"><span class="font-weight-bold">Kategori: </span>{{ $case->category->category_name ?? 'Ikke tilgjengelig' }}
                         <br>
@@ -92,7 +92,7 @@
                         @forelse ($case->conversations as $conversation)
                             <div>
                                 @if($conversation->from_guest && $conversation->messagetype == 'message')
-                                <span class="font-weight-bold mb-2"><i class="fa fa-comments" aria-hidden="true"></i> Gjest</span> @if(!$conversation->processed)<button type="button" class="btn btn-primary btn-sm" id="messageProcess-{{ $conversation->id }}" onclick="markProcessed('{{ $conversation->id }}', false);">Merk behandlet</button>@endif<br>
+                                    <span class="font-weight-bold mb-2"><i class="fa fa-comments" aria-hidden="true"></i> Gjest</span> @if(!$conversation->processed)<button type="button" class="btn btn-primary btn-sm" id="messageProcess-{{ $conversation->id }}" onclick="markProcessed('{{ $conversation->id }}', false);">Merk behandlet</button>@endif<br>
                                     <span>{{ $conversation->message }}</span><br>
                                 @elseif(!$conversation->from_guest && $conversation->messagetype == 'message')
                                     <span class="font-weight-bold mb-2"><i class="fa fa-comment" aria-hidden="true"></i> {{ $conversation->user->first_name }} - Gjesteservice Tusenfryd</span> @if(!$conversation->processed)<button type="button" class="btn btn-primary btn-sm" id="messageProcess-{{ $conversation->id }}" onclick="markProcessed('{{ $conversation->id }}', false);">Merk behandlet</button>@endif<br>
@@ -122,26 +122,26 @@
                 <div class="card-body">
                     <h3>Sak: {{ $case->reference }}</h3>
                     @if($statemachine->metadata('state', 'resolution'))
-                       <span class="text-danger font-weight-bold"><i class="fa fa-lock" aria-hidden="true"></i> Låst for redigering</span>
+                        <span class="text-danger font-weight-bold"><i class="fa fa-lock" aria-hidden="true"></i> Låst for redigering</span>
                     @endif
                     <div class="mb-3">
                         <span class="font-weight-bold">Status: </span><span class="badge badge-{{ $statemachine->metadata('state','class_color') }}">{{ $statemachine->metadata('state','title') }}</span><br>
                     </div>
                     @if($case->owner_name)
-                    <div class="mb-3">
-                    <span class="font-weight-bold">Gjest: </span>{{ Str::ucfirst($case->owner_name) ?? 'Ikke tilgjengelig' }}<br>
-                    <span class="font-weight-bold">Telefon: </span>{{ $case->owner_phone ?? 'Ikke tilgjengelig' }}<br>
-                    <span class="font-weight-bold">E-Post: </span>@if($case->owner_email)<a target="_blank" href="mailto:{{ $case->owner_email }}?subject=Vedrørende din hittegods sak {{ $case->reference }}">{{ $case->owner_email }}</a>@else<span>Ikke tilgjengelig</span>@endif<br>
-                    </div>
+                        <div class="mb-3">
+                            <span class="font-weight-bold">Gjest: </span>{{ Str::ucfirst($case->owner_name) ?? 'Ikke tilgjengelig' }}<br>
+                            <span class="font-weight-bold">Telefon: </span>{{ $case->owner_phone ?? 'Ikke tilgjengelig' }}<br>
+                            <span class="font-weight-bold">E-Post: </span>@if($case->owner_email)<a target="_blank" href="mailto:{{ $case->owner_email }}?subject=Vedrørende din hittegods sak {{ $case->reference }}">{{ $case->owner_email }}</a>@else<span>Ikke tilgjengelig</span>@endif<br>
+                        </div>
                     @endif
                     <div class="mb-3">
                         <span class="font-weight-bold">Mistet: </span>{{ date('d.m.Y', strtotime($case->lost_date)) }}<br>
                         <span class="font-weight-bold">Mistet posisjon: </span>{{ Str::ucfirst($case->lost_location) ?? 'Ukjent' }}<br>
                         @if($case->location_id)
-                        <div data-toggle="tooltip" data-html="true" data-placement="bottom" title="<b>Beskrivelse: </b>{{ $case->location->description }}">
-                            <span class="font-weight-bold">Lager posisjon: </span>{{ Str::ucfirst($case->location->location_name) }}<br>
-                            <small class="font-italic">Hold musen over for detaljer</small>
-                        </div>
+                            <div data-toggle="tooltip" data-html="true" data-placement="bottom" title="<b>Beskrivelse: </b>{{ $case->location->description }}">
+                                <span class="font-weight-bold">Lager posisjon: </span>{{ Str::ucfirst($case->location->location_name) }}<br>
+                                <small class="font-italic">Hold musen over for detaljer</small>
+                            </div>
                         @endif
                     </div>
                     <div class="mb-3">
@@ -153,8 +153,8 @@
 
 
                     @if(!$statemachine->metadata('state', 'resolution'))
-                    <a role="button" class="btn btn-primary btn-block" href="{{ Request::url() }}/edit">Rediger sak</a>
-                    <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#deleteconfirmModal">Slett sak (Permanent)</button>
+                        <a role="button" class="btn btn-primary btn-block" href="{{ Request::url() }}/edit">Rediger sak</a>
+                        <button type="button" class="btn btn-danger btn-block" data-toggle="modal" data-target="#deleteconfirmModal">Slett sak (Permanent)</button>
                     @endif
                     <small class="font-weight-bold d-flex justify-content-center mt-1"><a href="{{ Request::url() }}/edithistory">Historikk</a></small>
                 </div>
@@ -162,15 +162,15 @@
             <div class="card bg-light border-light">
                 <div class="card-body">
                     @if(!$statemachine->metadata('state', 'resolution'))
-                    <div class="text-center">
-                        <small class="font-weight-bold">Sammenlign & Slå Sammen</small>
+                        <div class="text-center">
+                            <small class="font-weight-bold">Sammenlign & Slå Sammen</small>
                             <div class="input-group">
                                 <input type="text" class="form-control" id="link-reference" name="link-reference" maxlength="7" placeholder="Referanse">
                                 <div class="input-group-append">
                                     <button type="button" class="btn btn-primary mb-2 float-right" onclick="redirectToLink();">Utfør</button>
                                 </div>
                             </div>
-                    </div>
+                        </div>
                     @endif
 
                     <div class="text-center">
@@ -182,7 +182,7 @@
                                 <button type="submit" class="btn btn-{{ $statemachine->metadata('state', 'canceled', 'class_color') }} btn-block" formaction="/case/{{ $case->reference }}/status/cancel">Avslutt</button>
                             @elseif($statemachine->getState() == "found")
                                 <button type="button" class="btn btn-{{ $statemachine->metadata('state', 'wait_for_delivery', 'class_color') }} btn-block" data-toggle="modal" data-target="#waitDeliveryModal">Venter på utlevering</button>
-                                <button type="submit" class="btn btn-{{ $statemachine->metadata('state', 'evicted', 'class_color') }} btn-block" formaction="/case/{{ $case->reference }}/status/evict">Kastet</button>
+                                <button type="submit" class="btn btn-{{ $statemachine->metadata('state', 'evicted', 'class_color') }} btn-block" formaction="/case/{{ $case->reference }}/status/evicted">Kastet</button>
                                 <button type="submit" class="btn btn-{{ $statemachine->metadata('state', 'wait_for_police', 'class_color') }} btn-block" formaction="/case/{{ $case->reference }}/status/wait_for_police">Send til politi</button>
                             @elseif($statemachine->getState() == "wait_for_police")
                                 <button type="submit" class="btn btn-{{ $statemachine->metadata('state', 'police', 'class_color') }} btn-block" formaction="/case/{{ $case->reference }}/status/police">Send til politi</button>
@@ -209,8 +209,8 @@
                             <div class="input-group">
                                 <select class="form-control" name="status">
                                     <option value="evicted">Kastet</option>
-                                    <option value="wait_for_police">Vent: Venter på utlevering</option>
-                                    <option value="police">Send til politi</option>
+                                    <option value="wait_for_police">Venter på politi</option>
+                                    <option value="police">Sendt til politi</option>
                                     <option value="canceled">Avsluttet</option>
                                     <option value="wait_for_delivery">Venter på utlevering</option>
                                     <option value="wait_for_send">Venter på sending</option>
