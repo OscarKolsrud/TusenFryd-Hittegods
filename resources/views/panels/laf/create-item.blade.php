@@ -13,7 +13,7 @@
     <div class="card-body">
             <form action="{{ route('store_item') }}" method="post">
                 @csrf
-                <input type="text" name="reference" value="{{ Str::upper(Str::random(7)) }}" hidden>
+                <input type="text" name="reference" value="G{{ Str::upper(Str::random(6)) }}" hidden>
                 <div class="form-group row">
                     <label for="item" class="col col-form-label font-weight-bold">Gjenstand type*</label>
                     <div class="col-10">
