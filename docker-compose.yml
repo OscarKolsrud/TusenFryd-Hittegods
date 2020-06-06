@@ -16,6 +16,7 @@ services:
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
       - ".cloud/rproxy/html:/usr/share/nginx/html"
       - ".cloud/rproxy/dhparam:/etc/nginx/dhparam"
+      - ".cloud/proxy-conf/proxy-conf.conf:/etc/nginx/conf.d/my_proxy.conf:ro"
     networks:
       - app-network
 
@@ -31,6 +32,7 @@ services:
       - ".cloud/rproxy/html:/usr/share/nginx/html"
       - ".cloud/rproxy/dhparam:/etc/nginx/dhparam"
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - ".cloud/proxy-conf/proxy-conf.conf:/etc/nginx/conf.d/my_proxy.conf:ro"
     environment:
       - DEFAULT_EMAIL=eirik@tusenfryd.no
       - NGINX_PROXY_CONTAINER=nginx-proxy
@@ -50,6 +52,7 @@ services:
       - nginx-proxy-letsencrypt
     volumes:
       - ./:/application:cached
+      - ".cloud/php/php.ini:/usr/local/etc/php/conf.d/php.ini"
     networks:
       - app-network
 

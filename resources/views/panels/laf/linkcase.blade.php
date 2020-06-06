@@ -46,7 +46,7 @@
                         <div class="form-group">
                             <select class="form-control" name="reference" id="reference">
                                 <option value="{{ $case1->reference }}" {{ (old("reference") == $case1->reference ? "selected":"") }}>{{ $case1->reference }}</option>
-                                <option value="{{ $case2->reference }}" {{ (old("reference") == $case2->reference ? "selected":"") }}>{{ $case2->reference }}</option>
+                                <option value="{{ $case2->reference }}" {{ (old("reference") !== $case2->reference ? "selected":"") }}>{{ $case2->reference }}</option>
                             </select>
                             @if ($errors->has('reference'))
                                 <span class="text-danger">{{ $errors->first('reference') }}</span>
