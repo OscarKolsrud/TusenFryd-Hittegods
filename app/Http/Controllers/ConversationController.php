@@ -60,7 +60,7 @@ class ConversationController extends Controller
             if ($validated['messagetype'] == 'message') {
                 $text = "Hei ". $case->owner_name .", Vi har sendt deg en ny melding i relasjon til sak ". $case->reference .". Vi setter pris på om du sjekker den. Du kan vise den her ". $url ." Vi ønsker deg en frydefull dag! Mvh Gjesteservice TusenFryd";
             } elseif ($validated['messagetype'] == 'phone') {
-                $text = "Hei ". $case->owner_name .", Vi har nettopp forsøkt å ringe deg i relasjon til sak". $case->reference .". Du kan gjerne ringe oss opp dersom dette passer deg, ellers kan vise saken her ". $url ." Vi ønsker deg en frydefull dag! Mvh Gjesteservice TusenFryd";
+                $text = "Hei ". $case->owner_name .", Vi har nettopp forsøkt å ringe deg i relasjon til sak ". $case->reference .". Du kan gjerne ringe oss opp dersom dette passer deg, ellers kan vise saken her ". $url ." Vi ønsker deg en frydefull dag! Mvh Gjesteservice TusenFryd";
             }
 
             $recipent = $case->owner_phone;
