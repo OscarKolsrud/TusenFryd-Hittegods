@@ -66,7 +66,7 @@ return [
         // list of all possible transitions
         'transitions' => [
             'cancel' => [
-                'from' => ['wait_for_delivery', 'found'],
+                'from' => ['wait_for_delivery', 'found', 'lost'],
                 'to' => 'canceled',
                 'metadata' => ['title' => 'Avslutt', 'class_color' => 'danger', 'colorcode' => '#FF0000']
             ],
