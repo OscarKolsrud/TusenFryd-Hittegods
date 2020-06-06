@@ -36,23 +36,23 @@ class InvestigationController extends Controller
             if ($date == "none" && $view == "all") {
                 return view('pages.laf.listpaginated', [
                     'title' => $sm->metadata('state', $list, 'title'),
-                    'cases' => Investigation::where('status', $list)->paginate(25)
+                    'cases' => Investigation::where('status', $list)->orderBy('created_at', 'desc')->paginate(25)
                 ]);
             } elseif($view !== "all") {
                 return view('pages.laf.listpaginated', [
                     'title' => $sm->metadata('state', $list, 'title'),
-                    'cases' => Investigation::where('status', $list)->where('initial_status', $view)->paginate(25)
+                    'cases' => Investigation::where('status', $list)->where('initial_status', $view)->orderBy('created_at', 'desc')->paginate(25)
                 ]);
             } else {
                 return view('pages.laf.listpaginated', [
                     'title' => $sm->metadata('state', $list, 'title'),
-                    'cases' => Investigation::where('status', $list)->where('lost_date', $date)->paginate(25)
+                    'cases' => Investigation::where('status', $list)->where('lost_date', $date)->orderBy('created_at', 'desc')->paginate(25)
                 ]);
             }
         } else {
             return view('pages.laf.listpaginated', [
                 'title' => 'Resultat',
-                'cases' => Investigation::where('status', $list)->paginate(25)
+                'cases' => Investigation::where('status', $list)->orderBy('created_at', 'desc')->paginate(25)
             ]);
         }
     }
