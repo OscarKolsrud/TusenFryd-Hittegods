@@ -83,43 +83,11 @@ Route::group(['middleware' => ['auth', 'activated', 'twostep', 'checkblocked']],
         Route::prefix('items')->group(function () {
             Route::post('/', 'InvestigationController@store_item')->name('store_item');
             Route::get('/create', 'InvestigationController@create_item')->name('create_item');
-
-            Route::get('today', function () {
-
-            });
-            Route::get('cancelled', function () {
-
-            });
-            Route::get('police', function () {
-
-            });
-            Route::get('evicted', function () {
-
-            });
         });
 
         Route::prefix('lost')->group(function () {
             Route::post('/', 'InvestigationController@store_lost')->name('store_lost');
             Route::get('/create', 'InvestigationController@create_lost')->name('create_lost');
-
-            Route::get('active', function () {
-
-            });
-            Route::get('today', function () {
-
-            });
-            Route::get('cancelled', function () {
-
-            });
-        });
-
-        Route::prefix('waiting')->group(function () {
-            Route::get('delivery', function () {
-
-            });
-            Route::get('send', function () {
-
-            });
         });
 
         Route::delete('{reference}', 'InvestigationController@destroy')->name('destroy_case');

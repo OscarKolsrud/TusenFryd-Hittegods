@@ -16,19 +16,19 @@
                 Siden disse sakene startet med samme status er kun sammenligning mulig
             </div>
         @endif
-            @if(!$compare_only)<form id="link-form" action="{{ url('case/' . $case1->reference . '/link/' . $case2->reference) }}" method="post">
-                @csrf
-                @endif
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">Felt</th>
-                @if(!$compare_only)<th scope="col">Gjenstand</th>@else<th scope="col">Sak 1</th>@endif
-                @if(!$compare_only)<th scope="col">Etterlysning</th>@else<th scope="col">Sak 2</th>@endif
-                @if(!$compare_only)<th scope="col">Etter sammenslåing</th>@endif
-            </tr>
-            </thead>
-            <tbody>
+        @if(!$compare_only)<form id="link-form" action="{{ url('case/' . $case1->reference . '/link/' . $case2->reference) }}" method="post">
+            @csrf
+            @endif
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Felt</th>
+                    @if(!$compare_only)<th scope="col">Gjenstand</th>@else<th scope="col">Sak 1</th>@endif
+                    @if(!$compare_only)<th scope="col">Etterlysning</th>@else<th scope="col">Sak 2</th>@endif
+                    @if(!$compare_only)<th scope="col">Etter sammenslåing</th>@endif
+                </tr>
+                </thead>
+                <tbody>
                 <tr>
                     <th scope="row">Referanse</th>
                     <td>
@@ -42,17 +42,17 @@
                         </div>
                     </td>
                     @if(!$compare_only)
-                    <td>
-                        <div class="form-group">
-                            <select class="form-control" name="reference" id="reference">
-                                <option value="{{ $case1->reference }}" {{ (old("reference") == $case1->reference ? "selected":"") }}>{{ $case1->reference }}</option>
-                                <option value="{{ $case2->reference }}" {{ (old("reference") !== $case2->reference ? "selected":"") }}>{{ $case2->reference }}</option>
-                            </select>
-                            @if ($errors->has('reference'))
-                                <span class="text-danger">{{ $errors->first('reference') }}</span>
-                            @endif
-                        </div>
-                    </td>
+                        <td>
+                            <div class="form-group">
+                                <select class="form-control" name="reference" id="reference">
+                                    <option value="{{ $case1->reference }}" {{ (old("reference") == $case1->reference ? "selected":"") }}>{{ $case1->reference }}</option>
+                                    <option value="{{ $case2->reference }}" {{ (old("reference") !== $case2->reference ? "selected":"") }}>{{ $case2->reference }}</option>
+                                </select>
+                                @if ($errors->has('reference'))
+                                    <span class="text-danger">{{ $errors->first('reference') }}</span>
+                                @endif
+                            </div>
+                        </td>
                     @endif
                 </tr>
                 <tr>
@@ -343,7 +343,7 @@
                     @if(!$compare_only)
                         <td>
                             <div class="form-group">
-                                <textarea class="form-control" name="additional_info" rows="4" required>{{ old('additional_info') ?? $case1->additional_info . " (Systemnotat: Denne saken stammer fra en sammenslåing mellom sak " . $case1->reference . " og sak " . $case2->reference . ")" ?? $case2->additional_info . " (Systemnotat: Denne saken stammer fra en sammenslåing mellom sak " . $case1->reference . " og sak " . $case2->reference . ")" }}</textarea>
+                                <textarea class="form-control" name="additional_info" rows="4" required>{{ old('additional_info') ?? $case1->additional_info . " {(Systemnotat: Denne saken stammer fra en sammenslåing mellom sak " . $case1->reference . " og sak " . $case2->reference . ")}" ?? $case2->additional_info . " {(Systemnotat: Denne saken stammer fra en sammenslåing mellom sak " . $case1->reference . " og sak " . $case2->reference . ")}" }}</textarea>
                                 @if ($errors->has('additional_info'))
                                     <span class="text-danger">{{ $errors->first('additional_info') }}</span>
                                 @endif
@@ -351,18 +351,18 @@
                         </td>
                     @endif
                 </tr>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
             <hr>
-        <div class="mt-3 mb-3">
-            <a role="button" class="btn btn-primary float-left" href="{{ url('case/' . $case1->reference) }}">Avbryt og gå tilbake til sak {{ $case1->reference }}</a>
-            @if(!$compare_only)
-                <button type="submit" class="btn btn-primary float-right">Lagre og slå sammen</button>
-                <br><br>
-                <small class="float-right">Denne handlingen kan <span class="font-weight-bold">ikke</span> reverseres/angres,
-                    <br>Og vil <span class="font-weight-bold">ikke</span> generere et varsel til Gjest</small>
-                </form>
-            @endif
-        </div>
+            <div class="mt-3 mb-3">
+                <a role="button" class="btn btn-primary float-left" href="{{ url('case/' . $case1->reference) }}">Avbryt og gå tilbake til sak {{ $case1->reference }}</a>
+                @if(!$compare_only)
+                    <button type="submit" class="btn btn-primary float-right">Lagre og slå sammen</button>
+                    <br><br>
+                    <small class="float-right">Denne handlingen kan <span class="font-weight-bold">ikke</span> reverseres/angres,
+                        <br>Og vil <span class="font-weight-bold">ikke</span> generere et varsel til Gjest</small>
+        </form>
+        @endif
     </div>
+</div>
 </div>

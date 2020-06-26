@@ -250,6 +250,7 @@ class InvestigationController extends Controller
             'statemachine' => StateMachine::get($case, 'investigation'),
             'latestaudituser' => User::find($case->audits()->latest()->first()->getMetadata()["user_id"]),
             'media' => $case->getMedia('caseimages')->sortByDesc('id'),
+            'locations' => Location::where('visible', 1)->get(),
         ]);
     }
 
@@ -387,14 +388,16 @@ class InvestigationController extends Controller
 
         if ($validated["from_guest"] == 'false') {
             $from_guest = false;
+            $processed = true;
         } else {
             $from_guest = true;
+            $processed = false;
         }
 
         Conversation::create([
             'investigation_id' => $case->id,
             'messagetype' => 'notification',
-            'processed' => $from_guest,
+            'processed' => $processed,
             'from_guest' => $from_guest,
             'message' => "Det ble lastet opp nye bilder"
         ]);
@@ -458,7 +461,7 @@ class InvestigationController extends Controller
                 'categories' => Category::where('visible', 1)->get(),
                 'colors' => Color::where('visible', 1)->get(),
                 'locations' => Location::where('visible', 1)->get(),
-                ]);
+            ]);
         } elseif($case2->initial_status == "found" && $case1->initial_status == "lost") {
             return view('pages.laf.linkcase', [
                 'compare_only' => false,
@@ -524,8 +527,7 @@ class InvestigationController extends Controller
             'owner_phone.phone' => 'Telefonnummeret er ugyldig'
         ]);
 
-        $case1 = Investigation::where('reference', $ref1)->firstOrFail();
-        $case1->reference = $validated["reference"];
+        $case1 = Investigation::where('reference', $validated["reference"])->firstOrFail();
         $case1->item = $validated["item"];
         $case1->description = $validated["description"];
         $case1->condition = $validated["condition"];
@@ -543,9 +545,16 @@ class InvestigationController extends Controller
         //$stateMachine = StateMachine::get($case1, 'investigation');
         //$stateMachine->apply('wait_for_delivery');
 
+        //Find the "unused reference"
+        if ($validated["reference"] == $ref1) {
+            $secondref = $ref2;
+        } else {
+            $secondref = $ref1;
+        }
+
         $case1->save();
 
-        $case2 = Investigation::where('reference', $ref2)->firstOrFail();
+        $case2 = Investigation::where('reference', $secondref)->firstOrFail();
         //Dont bother to use the state machine, just force it into the canceled state without logging
         $case2->status = 'canceled';
         $case2->save();
@@ -585,11 +594,11 @@ class InvestigationController extends Controller
 
 
     /**
- * Show the form for editing the specified resource.
- *
- * @param  int  $id
- * @return \Illuminate\Http\Response
- */
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function edit($id)
     {
         $case = Investigation::where('reference', $id)->firstOrFail();
@@ -603,12 +612,12 @@ class InvestigationController extends Controller
     }
 
     /**
- * Update the specified resource in storage.
- *
- * @param  \Illuminate\Http\Request  $request
- * @param  int  $id
- * @return \Illuminate\Http\Response
- */
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request, $id)
     {
         //Validate
@@ -749,6 +758,7 @@ class InvestigationController extends Controller
             'owner_name' => 'required',
             'owner_email' => 'required_without:owner_phone|email|nullable',
             'owner_phone' => 'required_without:owner_email|phone:auto|nullable',
+            'storage' => 'required|exists:locations,id',
         ], [
             'status.required' => 'Status kreves',
             'status.in' => 'Statusen er ikke gydlig',
@@ -756,7 +766,9 @@ class InvestigationController extends Controller
             'owner_email.required_without' => 'Enten en E-Post eller et telefonnummer kreves',
             'owner_email.email' => 'E-Posten er ikke gyldig',
             'owner_phone.required_without' => 'Enten en E-Post eller et telefonnummer kreves',
-            'owner_phone.phone' => 'Telefonnummeret er ugyldig'
+            'owner_phone.phone' => 'Telefonnummeret er ugyldig',
+            'storage.required' => 'En lagerposisjon kreves',
+            'storage.exists' => 'Lagerposisjonen må eksistere'
         ]);
 
         //Pull the case
@@ -775,6 +787,7 @@ class InvestigationController extends Controller
                 $case->owner_name = $request->input('owner_name');
                 $case->owner_email = $request->input('owner_email');
                 $case->owner_phone = $request->input('owner_phone');
+                $case->location_id = $request->input('storage');
 
                 $case->save();
 

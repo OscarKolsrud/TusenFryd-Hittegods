@@ -146,9 +146,9 @@
                     </div>
                     <div class="mb-3">
                         <span class="font-weight-bold">Opprettet: </span>{{ date('d.m.Y H:s', strtotime($case->created_at)) }}<br>
-                        <span class="font-weight-bold">Av: </span>{{ $case->user->first_name }}<br>
+                        <span class="font-weight-bold">Av: </span>{{ $case->user->first_name ?? 'Ukjent' }}<br>
                         <span class="font-weight-bold">Sist redigert: </span>{{ date('d.m.Y H:s', strtotime($case->audits()->latest()->first()->getMetadata()["audit_updated_at"])) }}<br>
-                        <span class="font-weight-bold">Av: </span>{{ $latestaudituser->first_name }}<br>
+                        <span class="font-weight-bold">Av: </span>{{ $latestaudituser->first_name ?? 'Ukjent' }}<br>
                     </div>
 
 
@@ -328,7 +328,7 @@
 
                     <label for="message" class="font-weight-bold h4">Legg til/bekreft kontakinformasjon</label>
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Navn</label>
+                        <label for="exampleInputEmail1">Navn*</label>
                         <input type="text" class="form-control" name="owner_name" required value="{{ old('owner_name') ?? $case->owner_name }}" placeholder="Navn">
                         @if ($errors->has('owner_name'))
                             <span class="text-danger">{{ $errors->first('owner_name') }}</span>
@@ -350,6 +350,20 @@
                             <span class="text-danger">{{ $errors->first('owner_email') }}</span>
                         @endif
                     </div>
+
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Lager posisjon *</label>
+                        <select class="form-control" id="storage" name="storage" required>
+                            <option selected disabled>Velg...</option>
+                            @foreach ($locations as $location)
+                                <option value="{{ $location->id }}" {{ (old("storage") == $location->id ? "selected":"") }}>{{ $location->location_name }} - ({{ Str::limit($location->description, 30) }})</option>
+                            @endforeach
+                        </select>
+                        @if ($errors->has('storage'))
+                            <span class="text-danger">{{ $errors->first('storage') }}</span>
+                        @endif
+                    </div>
+
                     <button type="submit" class="btn btn-primary mb-2 mt-3">Lagre og Oppdater</button>
                 </form>
             </div>
