@@ -29,27 +29,16 @@
 
         <div class="mt-5 text-center">
             <h4 class="mb-3">Søk etter sak</h4>
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Søkeord (F.eks: svart iphone)" onchange="doSearch();" id="searchQuery" aria-label="Søkeord" aria-describedby="searchButton">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="button" id="searchButton" onclick="doSearch(false)">Søk alle saker</button>
+            <form action="{{ route('get_search') }}" method="get">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Søkeord (F.eks: svart iphone)" name="query" id="searchQuery" aria-label="Søkeord" aria-describedby="searchButton">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit" id="searchButton">Søk alle saker</button>
+                    </div>
                 </div>
-            </div>
-            <small>*Dersom søket feiler kan det funke å trykke "Søk Alle saker" på nytt.</small>
-            <h5 class="mt-3 mb-3">Resultater</h5>
+            </form>
         </div>
 
-        <div id="search-results">
-            <div class="text-center">
-                Gjennomfør et søk, så vises resultatene her
-            </div>
-        </div>
-        <br>
-        <div class="btn-list d-flex">
-            <ul id="search-pagination" class="pagination-sm"></ul>
-        </div>
-
-        {{-- @include('panels.laf.search') --}}
     </div>
 </div>
 

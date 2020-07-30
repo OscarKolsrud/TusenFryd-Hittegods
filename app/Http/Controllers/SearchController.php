@@ -8,6 +8,28 @@ use Illuminate\Http\Request;
 
 class SearchController extends Controller
 {
+    public function do_search(Request $request) {
+        if (empty($request->input('query'))) {
+            $query = "";
+        } else {
+            $query = $request->input('query');
+        }
+        $search = Investigation::search($query)
+            ->with('colors')
+            ->minScore(0.3)
+            ->rule(FuzzySearch::class)
+            ->paginate(25);
+
+        //dd($search);
+
+        return view('pages.laf.listsearch', [
+            'query' => $request->input('query'),
+            'title' => 'Søkeresultat; ' . $query,
+            'cases' => $search
+        ]);
+
+    }
+
     public function item_search(Request $request) {
         if (empty($request->input('query'))) {
             $query = "";

@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\CheckIsUserActivated;
+use App\Http\Middleware\DisableDebug;
 use App\Http\Middleware\RecentlyViewedCase;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -72,5 +73,6 @@ class Kernel extends HttpKernel
         'level'             => \jeremykenedy\LaravelRoles\Middleware\VerifyLevel::class,
         'currentUser'       => \App\Http\Middleware\CheckCurrentUser::class,
         'recentLog'         => RecentlyViewedCase::class,
+        'DisableDebug'      => DisableDebug::class,
     ];
 }

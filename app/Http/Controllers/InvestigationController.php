@@ -631,8 +631,8 @@ class InvestigationController extends Controller
             'lost_location' => 'nullable',
             'location_id' => 'required_if:require_locationpos,true|exists:locations,id|nullable',
             'owner_name' => 'required_if:require_names,true',
-            'owner_email' => 'required_without:owner_phone|email|nullable',
-            'owner_phone' => 'required_without:owner_email|phone:auto|nullable',
+            'owner_email' => 'exclude_unless:require_names,true|required_without:owner_phone|email|nullable',
+            'owner_phone' => 'exclude_unless:require_names,true|required_without:owner_email|phone:auto|nullable',
             'additional_info' => 'nullable',
         ], [
             'item.required' => 'En gjenstand tittel kreves',

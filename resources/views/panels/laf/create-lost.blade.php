@@ -51,7 +51,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label for="description" class="col col-form-label font-weight-bold">Beskrivelse* <br><small>Interne notater: Benytt krøllparentes rundt f.eks {tekst}</small></label>
+              <label for="description" class="col col-form-label font-weight-bold">Beskrivelse* <br><small>Interne notater: Benytt krøllparentes rundt f.eks {tekst}</small></label>
                 <div class="col-10">
                     <textarea type="text" class="form-control" id="description" name="description" placeholder="Beskriv gjenstanden, inkluder gjerne bruksmerker, bakgrunner ol." rows="4" required>{{ old('description') }}</textarea>
                     @if ($errors->has('description'))

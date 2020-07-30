@@ -16,7 +16,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Homepage Route
-Route::group(['middleware' => ['web', 'checkblocked']], function () {
+Route::group(['middleware' => ['web', 'checkblocked', 'DisableDebug']], function () {
+
+    //Debug utility
+    Route::get('/ip-check', function(){
+        return request()->ip();
+    });
+
     Route::get('/', 'WelcomeController@welcome')->name('welcome');
     Route::get('/terms', 'TermsController@terms')->name('terms');
 
@@ -28,10 +34,12 @@ Route::group(['middleware' => ['web', 'checkblocked']], function () {
     //Signed URLs that are "public"
     Route::post('{reference}/images', 'InvestigationController@store_images')->name('store_images');
     Route::delete('{reference}/images/{image}', 'InvestigationController@destroy_image')->name('destroy_image');
+
+    // Authentication Routes (with self registration disabled)
+    Auth::routes(['register' => false]);
 });
 
-// Authentication Routes (with self registration disabled)
-Auth::routes(['register' => false]);
+
 
 // Public Routes
 Route::group(['middleware' => ['web', 'checkblocked']], function () {
@@ -76,18 +84,53 @@ Route::group(['middleware' => ['auth', 'activated', 'twostep', 'checkblocked']],
 
         Route::get('/list/{view}/{list?}/{date?}', 'InvestigationController@list')->name('list_case');
 
-        //This is the endpoints for the search function (paginated)
-        Route::get('/search', 'SearchController@item_search')->name('item_search');
-        Route::post('/search/show_results', 'SearchController@show_results')->name('show_results_search');
+        //This is the new search endpoint
+        Route::get('/search', 'SearchController@do_search')->name('get_search');
+
+        //This is the endpoints for the search function (paginated) THESE HAVE BEEN DISABLED AS FRONTEND SEARCH WAS BAD
+        //Route::get('/search', 'SearchController@item_search')->name('item_search');
+        //Route::post('/search/show_results', 'SearchController@show_results')->name('show_results_search');
 
         Route::prefix('items')->group(function () {
             Route::post('/', 'InvestigationController@store_item')->name('store_item');
             Route::get('/create', 'InvestigationController@create_item')->name('create_item');
+
+            Route::get('today', function () {
+
+            });
+            Route::get('cancelled', function () {
+
+            });
+            Route::get('police', function () {
+
+            });
+            Route::get('evicted', function () {
+
+            });
         });
 
         Route::prefix('lost')->group(function () {
             Route::post('/', 'InvestigationController@store_lost')->name('store_lost');
             Route::get('/create', 'InvestigationController@create_lost')->name('create_lost');
+
+            Route::get('active', function () {
+
+            });
+            Route::get('today', function () {
+
+            });
+            Route::get('cancelled', function () {
+
+            });
+        });
+
+        Route::prefix('waiting')->group(function () {
+            Route::get('delivery', function () {
+
+            });
+            Route::get('send', function () {
+
+            });
         });
 
         Route::delete('{reference}', 'InvestigationController@destroy')->name('destroy_case');
