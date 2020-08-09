@@ -70,6 +70,8 @@ Route::group(['middleware' => ['auth', 'activated', 'checkblocked']], function (
 // Registered and Activated User Routes
 Route::group(['middleware' => ['auth', 'activated', 'twostep', 'checkblocked']], function () {
 
+    Route::get('/statistics', 'InvestigationController@statistics')->name('statistics');
+
     //  Homepage Route - Redirect based on user role is in controller.
     Route::get('/home', ['as' => 'public.home',   'uses' => 'UserController@index']);
 

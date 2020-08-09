@@ -203,6 +203,10 @@
                                href="{{ url('/profile/'.Auth::user()->name) }}">
                                 Min Profil
                             </a>
+                            <a class="dropdown-item {{ Request::is('statistics') ? 'active' : null }}"
+                               href="{{ route('statistics') }}">
+                                Statistikk
+                            </a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                onclick="event.preventDefault();

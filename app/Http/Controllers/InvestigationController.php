@@ -825,4 +825,28 @@ class InvestigationController extends Controller
 
         return redirect('/home')->with(array('message' => 'Saken ble slettet', 'status' => 'info'));
     }
+
+    public function statistics() {
+        return view('pages.laf.statistics', [
+            'inital_lost' => Investigation::where('initial_status', 'lost')->count(),
+            'inital_found' => Investigation::where('initial_status', 'found')->count(),
+            'lost' => Investigation::where('status', 'lost')->count(),
+            'found' => Investigation::where('status', 'found')->count(),
+            'evicted' => Investigation::where('status', 'evicted')->count(),
+            'police' => Investigation::where('status', 'police')->count(),
+            'wait_for_police' => Investigation::where('status', 'wait_for_police')->count(),
+            'canceled' => Investigation::where('status', 'canceled')->count(),
+            'wait_for_delivery' => Investigation::where('status', 'wait_for_delivery')->count(),
+            'wait_for_send' => Investigation::where('status', 'wait_for_send')->count(),
+            'sent' => Investigation::where('status', 'sent')->count(),
+            'wait_for_pickup' => Investigation::where('status', 'wait_for_pickup')->count(),
+            'picked_up' => Investigation::where('status', 'picked_up')->count(),
+            'total' => Investigation::all(),
+            'thisuser_case' => Investigation::where('user_id', Auth::user()->id)->count(),
+            'messagetotal' => Conversation::where('messagetype', 'message')->count(),
+            'message_fromguest' => Conversation::where('from_guest', true)->where('messagetype', 'message')->count(),
+            'thisuser_message' => Conversation::where('messagetype', 'message')->where('user_id', Auth::user()->id)->count(),
+            'media' => Media::all(),
+        ]);
+    }
 }
