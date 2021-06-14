@@ -63,3 +63,4 @@ $.fn.extend({
         return !additions ? self : self.addClass(additions);
     }
 });
+

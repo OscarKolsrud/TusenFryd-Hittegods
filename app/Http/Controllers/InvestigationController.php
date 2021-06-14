@@ -23,7 +23,6 @@ class InvestigationController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
      */
     public function list(Request $request, $view="all", $list="found", $date="none")
     {
@@ -61,7 +60,6 @@ class InvestigationController extends Controller
     /**
      * Show the form for creating a new resource. (Item)
      *
-     * @return \Illuminate\Http\Response
      */
     public function create_item()
     {
@@ -75,7 +73,6 @@ class InvestigationController extends Controller
     /**
      * Show the form for creating a new resource. (Lost)
      *
-     * @return \Illuminate\Http\Response
      */
     public function create_lost()
     {
@@ -90,7 +87,6 @@ class InvestigationController extends Controller
      * Store a newly created resource in storage. (Item)
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
     public function store_item(Request $request)
     {
@@ -98,7 +94,7 @@ class InvestigationController extends Controller
             'reference' => 'required|unique:App\Models\Investigation,reference',
             'item' => 'required|min:3',
             'category' => 'required|exists:categories,id',
-            'color' => 'array|exists:colors,id|nullable',
+            'color' => 'array|exists:colors,id|required|min:1',
             'description' => 'required',
             'condition' => 'nullable',
             'date' => 'required|date',
@@ -113,6 +109,8 @@ class InvestigationController extends Controller
             'category,exists' => 'Kategorien valgt er ugyldig',
             'color.array' => 'Valgte farger er ikke en liste (array)',
             'color.exists' => 'En av de valgte fargene er ugyldig',
+            'color.required' => 'Minst en farge kreves',
+            'color.min' => 'Minst en farge kreves',
             'description.required' => 'En beskrivelse kreves',
             'date.required' => 'Dato tapt kreves',
             'date.date' => 'Datoformatet er feil',
@@ -159,7 +157,7 @@ class InvestigationController extends Controller
             'reference' => 'required|unique:App\Models\Investigation,reference',
             'item' => 'required|min:3',
             'category' => 'required|exists:categories,id',
-            'color' => 'array|exists:colors,id|nullable',
+            'color' => 'array|exists:colors,id|required|min:1',
             'description' => 'required',
             'date' => 'required|date',
             'location' => 'nullable',
@@ -175,6 +173,8 @@ class InvestigationController extends Controller
             'category,exists' => 'Kategorien valgt er ugyldig',
             'color.array' => 'Valgte farger er ikke en liste (array)',
             'color.exists' => 'En av de valgte fargene er ugyldig',
+            'color.required' => 'Minst en farge kreves',
+            'color.min' => 'Minst en farge kreves',
             'description.required' => 'En beskrivelse kreves',
             'date.required' => 'Dato tapt kreves',
             'date.date' => 'Datoformatet er feil',
@@ -496,7 +496,7 @@ class InvestigationController extends Controller
             'reference' => 'required|exists:investigations,reference',
             'item' => 'required|min:3',
             'description' => 'required',
-            'color' => 'array|exists:colors,id|nullable',
+            'color' => 'array|exists:colors,id|required|min:1',
             'condition' => 'nullable',
             'lost_location' => 'nullable',
             'date' => 'required|date',
@@ -514,6 +514,8 @@ class InvestigationController extends Controller
             'description.required' => 'En beskrivelse kreves',
             'color.array' => 'Valgte farger er ikke en liste (array)',
             'color.exists' => 'En av de valgte fargene er ugyldig',
+            'color.required' => 'Minst en farge kreves',
+            'color.min' => 'Minst en farge kreves',
             'date.required' => 'Dato tapt kreves',
             'date.date' => 'Datoformatet er feil',
             'category.required' => 'En kategori kreves',
@@ -624,7 +626,7 @@ class InvestigationController extends Controller
         $validated = $request->validate([
             'item' => 'required',
             'category_id' => 'required|exists:categories,id',
-            'color' => 'array|exists:colors,id|nullable',
+            'color' => 'array|exists:colors,id|required|min:1',
             'condition' => 'nullable',
             'description' => 'required',
             'lost_date' => 'required|date',
@@ -639,6 +641,8 @@ class InvestigationController extends Controller
             'description.required' => 'En beskrivelse kreves',
             'color.array' => 'Valgte farger er ikke en liste (array)',
             'color.exists' => 'En av de valgte fargene er ugyldig',
+            'color.required' => 'Minst en farge kreves',
+            'color.min' => 'Minst en farge kreves',
             'date.required' => 'Dato tapt kreves',
             'date.date' => 'Datoformatet er feil',
             'category_id.required' => 'En kategori kreves',

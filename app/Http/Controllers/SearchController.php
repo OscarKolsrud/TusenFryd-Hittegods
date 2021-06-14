@@ -15,9 +15,6 @@ class SearchController extends Controller
             $query = $request->input('query');
         }
         $search = Investigation::search($query)
-            ->with('colors')
-            ->minScore(0.3)
-            ->rule(FuzzySearch::class)
             ->paginate(25);
 
         //dd($search);
@@ -37,9 +34,6 @@ class SearchController extends Controller
             $query = $request->input('query');
         }
         $search = Investigation::search($query)
-            ->with('colors')
-            ->minScore(0.5)
-            ->rule(FuzzySearch::class)
             ->paginate(5);
         //->buildPayload();
             //->get();

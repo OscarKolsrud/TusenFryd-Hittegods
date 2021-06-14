@@ -6,7 +6,7 @@ use App\InvestigationIndexConfigurator;
 use Illuminate\Database\Eloquent\Model;
 Use Iben\Statable\Statable;
 use Illuminate\Support\Facades\Log;
-use ScoutElastic\Searchable;
+use Laravel\Scout\Searchable;
 use OwenIt\Auditing\Contracts\Auditable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
