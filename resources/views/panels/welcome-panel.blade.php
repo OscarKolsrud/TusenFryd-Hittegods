@@ -27,22 +27,36 @@
             <a role="button" href="{{ route('create_lost') }}" class="btn btn-outline-primary"><i class="fa fa-plus" aria-hidden="true"></i> Opprett etterlysning</a>
         </div>
 
+        <!--
         <div class="mt-5 text-center">
             <h4 class="mb-3">Søk etter sak</h4>
-            <div id="searchbox"></div>
-            <div id="refinement-list"></div>
-            <div id="hits"></div>
-            <center>
-                <div id="pagination"></div>
-            </center>
-        </div>
-        <div class="mt-2">
-            <p>
-                found=Registrert tapt (Etterlysning), lost=Registrert mistet (Gjenstand)
-            </p>
-        </div>
-        </div>
+            <form action="{{ route('get_search') }}" method="get">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Søkeord (F.eks: svart iphone)" name="query" id="searchQuery" aria-label="Søkeord" aria-describedby="searchButton">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit" id="searchButton">Søk alle saker</button>
+                    </div>
+                </div>
+            </form>
+        </div> -->
 
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header">Søk v2</div>
+    <div class="card-body">
+        <div id="searchbox"></div>
+        <div id="refinement-list"></div>
+        <div id="hits"></div>
+        <center>
+            <div id="pagination"></div>
+        </center>
+    </div>
+    <div class="mt-2">
+        <p>
+            found=Registrert tapt (Etterlysning), lost=Registrert mistet (Gjenstand)
+        </p>
     </div>
 </div>
 
@@ -116,17 +130,4 @@
             </div>
         @endforelse
     </div>
-</div>
-
-<div class="card mt-3">
-    <div class="card-header">Gammelt søk</div>
-    <div class="card-body">
-        <form action="{{ route('get_search') }}" method="get">
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Søkeord (F.eks: svart iphone)" name="query" id="searchQuery" aria-label="Søkeord" aria-describedby="searchButton">
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="submit" id="searchButton">Søk alle saker</button>
-                </div>
-            </div>
-        </form>
 </div>

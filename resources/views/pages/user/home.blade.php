@@ -73,7 +73,7 @@
         // Create the render function
         const renderHits = (renderOptions, isFirstRender) => {
             const { hits, widgetParams } = renderOptions;
-            
+
             widgetParams.container.innerHTML = `
 
         <table class="table table-hover">
