@@ -47,22 +47,7 @@
 
             instantsearch.widgets.searchBox({
                 container: '#searchbox',
-                placeholder: 'Søk etter saker...',
-                queryHook(query, search) {
-                    if(query.length > 2) {
-                        search(query);
-                    }
-                },
-            }),
-
-            instantsearch.widgets.hits({
-                container: '#hits',
-                templates: {
-                    item: `
-                    <h2>@{{#helpers.highlight}}{ "attribute": "reference" }@{{/helpers.highlight}}</h2>
-                            @{{#helpers.highlight}}{ "attribute": "description" }@{{/helpers.highlight}}
-                    `,
-                },
+                placeholder: 'Søk etter saker...'
             }),
 
             instantsearch.widgets.pagination({
@@ -93,6 +78,7 @@
                 .map(
                     item =>
                         `
+<tr>
 <th scope="row"><a href="/case/${item.reference}">${instantsearch.highlight({ attribute: 'reference', hit: item })}</a></th>
 <td>${returnStatusBadge(item.status)}</td>
 <td>${instantsearch.highlight({ attribute: 'item', hit: item })}</td>
@@ -100,6 +86,7 @@
 <td>${instantsearch.highlight({ attribute: 'description', hit: item })}</td>
 <td>${returnColors(item.colors)}</td>
 <td>${formatDate(item.lost_date)}</td>
+</tr>
 `
                 )
                 .join('')}
@@ -120,18 +107,22 @@
             var index;
             var returnString = "";
 
-            for (index = 0; index < input.length; ++index) {
-                //Return the correct classlist
-                if (typeof input[index].class !== 'undefined') {
-                    var classList = "fa fa-circle text-" + input[index].class;
-                } else {
-                    var classList = "fa fa-circle text-secondary";
+            if (typeof input !== 'undefined') {
+                for (index = 0; index < input.length; ++index) {
+                    //Return the correct classlist
+                    if (typeof input[index].class !== 'undefined') {
+                        var classList = "fa fa-circle text-" + input[index].class;
+                    } else {
+                        var classList = "fa fa-circle text-secondary";
+                    }
+
+                    returnString += '<span>' + input[index].color + '<i class="' + classList + '" aria-hidden="true"></i></span>';
                 }
 
-                returnString += '<span>' + input[index].color + '<i class="' + classList + '" aria-hidden="true"></i></span>';
+                return returnString;
+            } else {
+                return 'Ingen farger';
             }
-
-            return returnString;
         }
 
         function returnStatusBadge(status) {
