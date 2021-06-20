@@ -81,7 +81,7 @@
                             </div>
                             <div class="form-group">
                                 <div class="btn-group float-right" role="group" aria-label="Flere valg">
-                                    <button type="button" class="btn btn-secondary mb-2" data-toggle="modal" data-target="#moreActionsModal" @if($statemachine->metadata('state', 'resolution')) disabled @endif>Flere handlinger</button>
+                                    <button type="button" class="btn btn-secondary mb-2" data-toggle="modal" data-target="#moreActionsModal" @if($statemachine->metadata('state', 'resolution')) disabled @endif>Loggfør telefonsamtale</button>
                                     <button type="submit" class="btn btn-primary mb-2" @if($statemachine->metadata('state', 'resolution')) disabled @endif>Send melding</button>
                                 </div>
                             </div>
