@@ -147,7 +147,9 @@
                         <span class="font-weight-bold mb-2"><i class="fa fa-comments" aria-hidden="true"></i> Gjest (Fra deg)</span><br>
                         <span>{{ $conversation->message }}</span><br>
                     @elseif(!$conversation->from_guest && $conversation->messagetype == 'message')
-                        <span class="font-weight-bold mb-2"><i class="fa fa-comment" aria-hidden="true"></i> {{ $conversation->user->first_name }} - Gjesteservice Tusenfryd</span> <br>
+                        <span class="font-weight-bold mb-2"><i class="fa fa-comment" aria-hidden="true"></i> {{ $conversation->user->first_name }} - Gjesteservice Tusenfryd @if($conversation->user->hasRole('admin')) <span class="pull-right badge badge-primary" style="margin-top:4px">
+                Skiftleder
+            </span> @endif </span> <br>
                         <span>{{ $conversation->message }}</span><br>
                     @else
                         <span class="font-weight-bold mb-2"><i class="fa fa-bullhorn" aria-hidden="true"></i>{{ $conversation->message }}</span><br>

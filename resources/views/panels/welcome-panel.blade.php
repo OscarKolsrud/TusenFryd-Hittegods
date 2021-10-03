@@ -56,6 +56,8 @@
     <div class="mt-2">
         <p>
             found=Registrert tapt (Etterlysning), lost=Registrert mistet (Gjenstand)
+            <br>
+            <small>*Dersom fargen er endret etter opprettelse er denne ukorrekt her</small>
         </p>
     </div>
 </div>

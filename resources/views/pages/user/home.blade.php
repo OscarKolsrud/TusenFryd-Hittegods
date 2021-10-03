@@ -21,8 +21,8 @@
 @endsection
 
 @section('footer_scripts')
-    <script src="https://cdn.jsdelivr.net/npm/@meilisearch/instant-meilisearch/dist/instant-meilisearch.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@meilisearch/instant-meilisearch@0.5.0/dist/instant-meilisearch.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.29.1"></script>
 
     <script>
         //Instantsearch
@@ -69,7 +69,7 @@
                 <th scope="col">Gjenstand</th>
                 <th scope="col">Kategori</th>
                 <th scope="col">Beskrivelse</th>
-                <th scope="col">Farger</th>
+                <th scope="col">Farger*</th>
                 <th scope="col">Mistet/funnet dato</th>
             </tr>
             </thead>
